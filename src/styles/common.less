@@ -1,0 +1,243 @@
+body {
+  color: #333333;
+}
+
+/* 滚动条凹槽的颜色，还可以设置边框属性 */
+*::-webkit-scrollbar-track-piece {
+  background-color: #f8f8f8;
+  border-radius: 2em;
+}
+
+/* 滚动条的宽度 */
+*::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+/* 滚动条的设置 */
+*::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 2em;
+  background-clip: padding-box;
+}
+
+/* 滚动条鼠标移上去 */
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #bbb;
+}
+
+//顶部筛选框通用样式
+.top_search {
+  margin-bottom: 5px;
+  display: flex;
+  flex-wrap: wrap;
+
+  > div {
+    margin-bottom: 20px;
+    align-items: center;
+  }
+
+  .item {
+    display: flex;
+    align-items: center;
+  }
+
+  .label {
+    font-size: 12px;
+    color: #333;
+    margin-right: 5px;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .ant-input,
+  .ant-select-selection-search-input {
+    width: 210px !important;
+    height: 30px;
+    background: #fff;
+    border-radius: 6px;
+  }
+
+  .ant-picker {
+    width: 230px;
+    height: 30px;
+    background: #fff;
+    border-radius: 6px;
+  }
+
+  .ant-select:not(.ant-select-customize-input) {
+    .ant-select-selector {
+      width: 210px;
+      height: 30px;
+      background: #fff;
+      border-radius: 6px;
+    }
+
+    &.custom .ant-select-selector {
+      width: 100%;
+    }
+  }
+
+  .ant-input-group.ant-input-group-compact > .ant-cascader-picker:first-child .ant-input,
+  .ant-input-group.ant-input-group-compact > .ant-select-auto-complete:first-child .ant-input,
+  .ant-input-group.ant-input-group-compact > .ant-select:first-child > .ant-select-selector,
+  .ant-input-group.ant-input-group-compact > :first-child {
+    border-radius: 0;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+
+  .ant-input-group.ant-input-group-compact > .ant-cascader-picker-focused:last-child .ant-input,
+  .ant-input-group.ant-input-group-compact > .ant-cascader-picker:last-child .ant-input,
+  .ant-input-group.ant-input-group-compact > .ant-select:last-child > .ant-select-selector,
+  .ant-input-group.ant-input-group-compact > :last-child {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+}
+
+//按钮通用样式
+.ant-btn-primary {
+  width: 88px !important;
+  height: 30px !important;
+  background: linear-gradient(180deg, #3768ce 0%, #74b0e4 100%) !important;
+  border-radius: 6px !important;
+}
+
+.ant-btn-undefined {
+  border-radius: 6px !important;
+}
+
+.ant-btn-background-ghost {
+  background: transparent !important;
+}
+
+.ant-btn-danger {
+  width: 88px !important;
+  height: 30px !important;
+  border-radius: 6px !important;
+  background-color: #d10000 !important;
+}
+
+.ant-modal-confirm-btns,
+.ant-modal-footer {
+  .ant-btn {
+    width: 88px !important;
+    height: 30px !important;
+    border-radius: 6px !important;
+  }
+}
+
+//表头样式
+.ant-table-thead {
+  .ant-table-cell {
+    background-color: rgb(194 219 255 / 44.5%) !important;
+    color: #333 !important;
+    font-size: 14px !important;
+    font-family: 'PingFang SC-Medium', 'PingFang SC' !important;
+  }
+}
+
+.ant-table-thead
+  > tr
+  > th:not(
+    :last-child,
+    .ant-table-selection-column,
+    .ant-table-row-expand-icon-cell,
+    [colspan]
+  )::before {
+  display: none !important;
+}
+
+// 表格样式
+.table-striped td {
+  background-color: rgb(236 243 254 / 44.5%);
+}
+
+.table-striped td.ant-table-cell {
+  background-color: rgb(236 243 254 / 44.5%);
+}
+
+//弹窗倒角/底色
+.ant-modal-content {
+  border-radius: 8px !important;
+
+  .ant-modal-close {
+    color: #fff !important;
+  }
+}
+
+.ant-modal-header {
+  border-radius: 8px 8px 0 0 !important;
+  background: linear-gradient(90deg, #79dff1 0%, #78c7df 30%, #618ae2 100%) !important;
+
+  .ant-modal-title {
+    color: #fff !important;
+  }
+}
+
+//弹框下输入框样式
+.ant-modal-body {
+  .ant-input,
+  .ant-input-password {
+    height: 30px;
+    background: #fff;
+    border-radius: 6px;
+  }
+
+  .ant-input-password {
+    .ant-input {
+      margin-top: -4px;
+      height: 26px;
+    }
+  }
+
+  .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    height: 30px;
+    background: #04dcec00;
+    border-radius: 6px;
+  }
+
+  .ant-input-number {
+    border-radius: 6px;
+  }
+}
+
+//容器左上方通用标题
+.tab_title {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  text-align: center;
+  line-height: 40px;
+  font-size: 14px;
+  font-family: 'PingFang SC-Bold', 'PingFang SC';
+  font-weight: bold;
+  color: #5389d8;
+  width: 130px;
+  height: 40px !important;
+  background: url('@/assets/images/tabstitle.png') no-repeat !important;
+  background-size: 100% 100% !important;
+  background-position: 0 0;
+}
+
+.exportRecords {
+  display: flex;
+  align-items: center;
+}
+
+.fit-cover {
+  object-fit: cover;
+}
+
+.fit-contain {
+  object-fit: contain;
+}
+
+.fit-fill {
+  object-fit: fill;
+}
+
+.fit-none {
+  object-fit: none;
+}

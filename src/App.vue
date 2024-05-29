@@ -1,0 +1,56 @@
+<template>
+  <!-- <v-scale-screen :width="innerWidth" :height="innerHeight"> -->
+  <ConfigProvider :locale="getAntdLocale" :transform-cell-text="transformCellText">
+    <router-view #="{ Component }">
+      <component :is="Component" />
+    </router-view>
+    <!-- <EventMessage></EventMessage> -->
+  </ConfigProvider>
+  <!-- </v-scale-screen> -->
+</template>
+
+<script setup lang="ts">
+  import { watchEffect } from 'vue';
+  import { useRoute } from 'vue-router';
+  import { ConfigProvider } from 'ant-design-vue';
+  import { transformI18n } from './hooks/useI18n';
+  import { useLocale } from '@/locales/useLocale';
+  import { isEmpty } from '@/utils/common';
+  // import EventMessage from '@/components/business/eventMessage/index.vue';
+  import VScaleScreen from 'v-scale-screen';
+
+  const innerWidth = 1920;
+  const innerHeight = 1080;
+  const route = useRoute();
+  const { getAntdLocale } = useLocale();
+
+  // watchEffect(() => {
+  //   if (route.meta?.title) {
+  //     // 翻译网页标题
+  //     document.title = transformI18n(route.meta.title);
+  //   }
+  // });
+
+  /**
+   * 表格数据过滤
+   * @param row 表格行数据
+   * @returns
+   */
+  const transformCellText = ({ text, column /* , record, index */ }) => {
+    //   console.log('transformCellText', text);
+    // console.log('表单：', column);
+
+    if (Array.isArray(text)) {
+      return !isEmpty(text[0]) ? text[0] : '--';
+    } else {
+      return !isEmpty(text) ? text : '--';
+    }
+  };
+</script>
+
+<style lang="less">
+  .v-screen-box {
+    background-color: #ffffff00 !important;
+  }
+</style>
+WS
