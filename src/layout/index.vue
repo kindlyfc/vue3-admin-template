@@ -12,15 +12,12 @@
       <avatar />
       <asiderList />
       <loginOut />
-      <!-- <Logo :collapsed="collapsed" /> -->
-      <!-- <AsideMenu :collapsed="collapsed" :theme="getTheme" /> -->
     </Layout.Sider>
     <Layout>
       <PageHeader />
       <Layout.Content class="layout-content">
         <tabs-view />
       </Layout.Content>
-      <!-- <PageFooter /> -->
     </Layout>
   </Layout>
 </template>

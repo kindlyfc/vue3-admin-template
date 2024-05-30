@@ -90,17 +90,8 @@ export const useUserStore = defineStore({
     /** 登录成功之后, 获取用户信息以及生成权限路由 */
     async afterLogin() {
       try {
-        // const wsStore = useWsStore();
-        // const [userInfo, { perms, menus }] = await Promise.all([getInfo(), permmenu()]);
-
-        // this.perms = perms;
-        // this.name = userInfo.name;
-        // this.avatar = userInfo.headImg;
-        // this.userInfo = userInfo;
         // 生成路由
         const generatorResult = await generatorDynamicRouter();
-        // this.menus = generatorResult.menus.filter((item) => !item.meta?.hideInMenu);
-        // !wsStore.client && wsStore.initSocket();
         this.menus = generatorResult.menus;
         return generatorResult.menus;
       } catch (error) {

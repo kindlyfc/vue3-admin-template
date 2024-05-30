@@ -191,7 +191,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       port: 8088,
       proxy: {
         '/api': {
-          target: 'http://182.148.114.142:2670', //正式
+          target: 'http://110.185.187.120:18080', //正式
           // target: 'http://172.18.1.243:28083', //开发环境
           changeOrigin: true,
           // rewrite: (path) => path.replace(/^\/api/, av ''),

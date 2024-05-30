@@ -11,7 +11,7 @@ export interface TreeDataItem extends ATreeDataItem {
  * @param {number[]|string[]} keyPath ID路径
  */
 export const formatDept2Tree = (
-  depts: API.SysDeptListResult[],
+  depts: any[],
   parentId: number | null = null,
   keyPath: (string | number)[] = [],
 ): TreeDataItem[] => {
@@ -38,7 +38,7 @@ export const formatDept2Tree = (
  * @param {number[]|string[]} keyPath ID路径
  */
 export const formatMenu2Tree = (
-  menus: API.MenuListResult,
+  menus: any,
   parentId: number | null = null,
   keyPath: (string | number)[] = [],
 ): TreeDataItem[] => {

@@ -11,26 +11,14 @@ import { to as _to } from '@/utils/awaitTo';
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
-const defaultRoutePath = '/iotDevice/equipmentEntry';
+const defaultRoutePath = '/colorManage/mobile';
 
 export function createRouterGuards(router: Router, whiteNameList: WhiteNameList) {
   router.beforeEach(async (to, _, next) => {
     NProgress.start(); // start progress bar
     const userStore = useUserStore();
 
-    // 从url中获取token
-    const token1 = to.query.client_token as string;
-    if (token1) {
-      userStore.setToken(token1);
-
-      await userStore.loginInf()
-
-      // 清除url中的token
-      window.history.replaceState(null, '', window.location.href.replace(/client_token=.*/, ''));
-    }
-
     const token = Storage.get(ACCESS_TOKEN_KEY, null);
-
     if (token) {
       if (to.name === LOGIN_NAME) {
         next({ path: defaultRoutePath });

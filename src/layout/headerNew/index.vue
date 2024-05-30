@@ -1,7 +1,7 @@
 <template>
   <Layout.Header class="layout-header">
     <div class="secondPath">
-      <img src="@/assets/images/logo.png" alt="智慧交通灯备电监测一张图" />
+      <img src="@/assets/images/logo.png" alt="网页标题" />
       <div class="second_content">
         <div
           v-for="item in SecondPath"
@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="Bread_crumbs">
-      智慧交通灯备电监测一张图：{{ firstPathName || '' }}
+      网页标题{{ firstPathName || '' }}
       <span>{{ secondPathName || '' }}</span></div
     >
   </Layout.Header>

@@ -4,7 +4,6 @@
     <router-view #="{ Component }">
       <component :is="Component" />
     </router-view>
-    <!-- <EventMessage></EventMessage> -->
   </ConfigProvider>
   <!-- </v-scale-screen> -->
 </template>
@@ -16,7 +15,6 @@
   import { transformI18n } from './hooks/useI18n';
   import { useLocale } from '@/locales/useLocale';
   import { isEmpty } from '@/utils/common';
-  // import EventMessage from '@/components/business/eventMessage/index.vue';
   import VScaleScreen from 'v-scale-screen';
 
   const innerWidth = 1920;

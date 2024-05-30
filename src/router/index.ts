@@ -12,7 +12,7 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Layout',
-    redirect: '/practiceSandard/cameraAlarm',
+    redirect: '/colorManage/mobile',
     component: () => import(/* webpackChunkName: "layout" */ '@/layout/index.vue'),
     meta: {
       title: '首页',

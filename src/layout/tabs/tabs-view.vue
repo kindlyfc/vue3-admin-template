@@ -1,95 +1,12 @@
 <template>
   <div class="tabs-view">
-    <!-- <Tabs
-      :active-key="activeKey"
-      hide-add
-      type="editable-card"
-      class="tabs"
-      @change="changePage"
-      @edit="editTabItem"
-    >
-      <Tabs.TabPane v-for="pageItem in tabsList" :key="pageItem.fullPath">
-        <template #tab>
-          <Dropdown :trigger="['contextmenu']">
-            <div style="display: inline-block">
-              <TitleI18n :title="pageItem.meta?.title" />
-            </div>
-            <template #overlay>
-              <Menu style="user-select: none">
-                <Menu.Item key="1" :disabled="activeKey !== pageItem.fullPath" @click="reloadPage">
-                  <reload-outlined />
-                  {{ $t('layout.multipleTab.reload') }}
-                </Menu.Item>
-                <Menu.Item key="2" @click="removeTab(pageItem)">
-                  <close-outlined />
-                  {{ $t('layout.multipleTab.close') }}
-                </Menu.Item>
-                <Menu.Divider />
-                <Menu.Item key="3" @click="closeLeft(pageItem)">
-                  <vertical-right-outlined />
-                  {{ $t('layout.multipleTab.closeLeft') }}
-                </Menu.Item>
-                <Menu.Item key="4" @click="closeRight(pageItem)">
-                  <vertical-left-outlined />
-                  {{ $t('layout.multipleTab.closeRight') }}
-                </Menu.Item>
-                <Menu.Divider />
-                <Menu.Item key="5" @click="closeOther(pageItem)">
-                  <column-width-outlined />
-                  {{ $t('layout.multipleTab.closeOther') }}
-                </Menu.Item>
-                <Menu.Item key="6" @click="closeAll">
-                  <minus-outlined />
-                  {{ $t('layout.multipleTab.closeAll') }}
-                </Menu.Item>
-              </Menu>
-            </template>
-          </Dropdown>
-        </template>
-      </Tabs.TabPane>
-
-      <template #rightExtra>
-        <Dropdown :trigger="['click']" placement="bottomRight">
-          <a class="ant-dropdown-link" @click.prevent>
-            <down-outlined :style="{ fontSize: '20px' }" />
-          </a>
-          <template #overlay>
-            <Menu style="user-select: none">
-              <Menu.Item key="1" :disabled="activeKey !== route.fullPath" @click="reloadPage">
-                <reload-outlined />
-                {{ $t('layout.multipleTab.reload') }}
-              </Menu.Item>
-              <Menu.Item key="2" @click="removeTab(route)">
-                <close-outlined />
-                {{ $t('layout.multipleTab.close') }}
-              </Menu.Item>
-              <Menu.Divider />
-              <Menu.Item key="5" @click="closeOther(route)">
-                <column-width-outlined />
-                {{ $t('layout.multipleTab.closeOther') }}
-              </Menu.Item>
-              <Menu.Item key="6" @click="closeAll">
-                <minus-outlined />
-                {{ $t('layout.multipleTab.closeAll') }}
-              </Menu.Item>
-            </Menu>
-          </template>
-        </Dropdown>
-      </template>
-    </Tabs> -->
     <div class="tabs-view-content">
       <router-view v-slot="{ Component }">
         <template v-if="Component">
-          <!-- <transition
-            :name="Object.is(route.meta?.transitionName, false) ? '' : 'fade-transform'"
-            mode="out-in"
-            appear
-          > -->
           <keep-alive>
             <component :is="Component" v-if="$route.meta.keepAlive" />
           </keep-alive>
           <component :is="Component" v-if="!$route.meta.keepAlive" />
-          <!-- </transition> -->
         </template>
       </router-view>
     </div>
@@ -99,33 +16,18 @@
 <script setup lang="ts">
   import { computed, watch } from 'vue';
   import { useRoute } from 'vue-router';
-  // import {
-  //   DownOutlined,
-  //   ReloadOutlined,
-  //   CloseOutlined,
-  //   VerticalRightOutlined,
-  //   VerticalLeftOutlined,
-  //   ColumnWidthOutlined,
-  //   MinusOutlined,
-  // } from '@ant-design/icons-vue';
-  // import { message } from 'ant-design-vue';
+
   import type { RouteLocation } from 'vue-router';
   import { Storage } from '@/utils/Storage';
   import { TABS_ROUTES } from '@/enums/cacheEnum';
   import { useTabsViewStore, blackList } from '@/store/modules/tabsView';
   import { useKeepAliveStore } from '@/store/modules/keepAlive';
-  // import { REDIRECT_NAME } from '@/router/constant';
-  // import { TitleI18n } from '@/components/basic/title-i18n';
 
   type RouteItem = Omit<RouteLocation, 'matched' | 'redirectedFrom'>;
 
   const route = useRoute();
-  // const router = useRouter();
   const tabsViewStore = useTabsViewStore();
   const keepAliveStore = useKeepAliveStore();
-
-  // const activeKey = computed(() => tabsViewStore.getCurrentTab?.fullPath);
-
   // 标签页列表
   const tabsList = computed(() => tabsViewStore.getTabsList);
 

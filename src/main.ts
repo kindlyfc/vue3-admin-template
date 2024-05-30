@@ -11,12 +11,7 @@ import {
   setupGlobalMethods,
   setupCustomComponents,
 } from '@/plugins';
-import exportBtn from '@/components/basic/exportBtn/index.vue';
-import jessibucaPlayer from '@/components/basic/jessibucaPlayer.vue';
-import VideoPlayer from '@/components/basic/VideoPlayer.vue';
-import chooseTree from '@/components/basic/chooseTree.vue';
 const app = createApp(App);
-import vue3videoPlay from 'vue3-video-play-emiyagm'; // 引入组件
 import 'vue3-video-play-emiyagm/dist/style.css'; // 引入css
 import 'font-awesome/css/font-awesome.css'
 function setupPlugins() {
@@ -40,11 +35,6 @@ async function setupApp() {
   await setupI18n(app);
   // 挂载路由
   await setupRouter(app);
-  app.use(vue3videoPlay);
-  app.component('exportBtn', exportBtn); //注册全局导出组件
-  // app.component('jessibucaPlayer', jessibucaPlayer); //注册全局播放组件
-  app.component('VideoPlayer', VideoPlayer); //注册全局播放组件
-  app.component('chooseTree', chooseTree); //注册全局设备选择组件
   app.mount('#app');
 }
 

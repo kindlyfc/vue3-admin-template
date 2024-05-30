@@ -90,8 +90,8 @@ export const generatorDynamicRouter = () => {
       return v;
     });
 
-    const menus = [...functionMenu, ...endRoutes];
-    // const menus = commonMenus;
+    // const menus = [...functionMenu, ...endRoutes];
+    const menus = [...commonMenus, ...endRoutes]; //暂时屏蔽权限
 
     layout.children = menus;
     layout.redirect = menus[0]?.redirect;

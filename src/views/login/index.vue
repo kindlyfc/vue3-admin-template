@@ -2,7 +2,7 @@
   <div class="login-box">
     <div class="login-center">
       <div class="login-logo">
-        <img src="@/assets/images/logo.png" alt="智慧交通灯系统" />
+        <img src="@/assets/images/logo.png" alt="网页标题" />
       </div>
       <a-form
         layout="horizontal"
@@ -81,9 +81,6 @@
           >
             登录
           </a-button>
-          <!-- <a-button type="link" href="/api/v1/jump/index" block class="mt-10px">
-            一键登录
-          </a-button> -->
         </a-form-item>
       </a-form>
     </div>

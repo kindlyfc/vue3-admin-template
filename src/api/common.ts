@@ -22,36 +22,6 @@ export function getUserOrgs(name) {
     params: { name }
   });
 }
-/**
- * @description 根据机构id获取设备播放地址
- */
-export function getDivceUrl(id: any) {
-  return request({
-    url: `/v1/media/openLive?id=${id}`,
-    method: 'get',
-  });
-}
-
-/**
- * @description 根据机构id获取设备列表
- */
-export function deviceList(orgIds: any, name) {
-  return request({
-    url: `/v1/device/list?orgIds=${orgIds}&name=${name}`,
-    method: 'get',
-  });
-}
-
-/**
- * @description 摄像头断流
- */
-export function cameraClose(id) {
-  return request({
-    url: `/v1/device/camera/close`,
-    method: 'put',
-    data: { id }
-  });
-}
 
 /**
  * @description 导出数据用公共接口
@@ -82,17 +52,6 @@ export function exportData({ url, params, method }) {
 
         reject(err);
       });
-  });
-}
-
-
-/**
- * @description 根据证件号获取识别记录
- */
-export function getAlertRecord(id: number) {
-  return request({
-    url: `/v1/alert/today?idNumber=${id}`,
-    method: 'get',
   });
 }
 
