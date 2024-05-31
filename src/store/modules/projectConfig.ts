@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import darkThemeCss from 'ant-design-vue/dist/antd.dark.css?raw';
+// import darkThemeCss from 'ant-design-vue/dist/antd.dark.css?raw';
 import { useMutationObserver } from '@vueuse/core';
 import { ConfigProvider } from 'ant-design-vue';
 import type { Theme } from 'ant-design-vue/es/config-provider/';
@@ -9,7 +9,7 @@ import { Storage } from '@/utils/Storage';
 
 const styleDom = document.createElement('style');
 styleDom.dataset.type = 'theme-dark';
-styleDom.textContent = darkThemeCss;
+// styleDom.textContent = darkThemeCss;
 document.head.appendChild(styleDom);
 
 useMutationObserver(

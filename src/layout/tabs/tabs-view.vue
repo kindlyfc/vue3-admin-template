@@ -139,7 +139,7 @@
   }
 
   .tabs-view {
-    border-top: 1px solid #eee;
+    // border-top: 1px solid #eee;
 
     :deep(.tabs) {
       .ant-tabs-nav {
@@ -190,9 +190,14 @@
 
     .tabs-view-content {
       /* height: calc(100vh - #{$header-height}); */
-      height: calc(100vh - 110px);
-      padding: 20px 20px 0;
-      overflow: auto;
+      height: calc(100vh - 120px);
+      padding: 0 20px 0;
+      overflow: hidden;
+
+      > div {
+        padding-top: 20px;
+        background: #fff;
+      }
 
       &::-webkit-scrollbar {
         width: 0px !important;

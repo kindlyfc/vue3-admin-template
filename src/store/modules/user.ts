@@ -92,6 +92,7 @@ export const useUserStore = defineStore({
       try {
         // 生成路由
         const generatorResult = await generatorDynamicRouter();
+        console.log(generatorResult)
         this.menus = generatorResult.menus;
         return generatorResult.menus;
       } catch (error) {

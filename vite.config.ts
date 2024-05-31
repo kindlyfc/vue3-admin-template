@@ -17,6 +17,13 @@ import type { UserConfig, ConfigEnv } from 'vite';
 const CWD = process.cwd();
 const baseSrc = fileURLToPath(new URL('./src', import.meta.url));
 
+// 如果你使用到了 ant-design-vue 的 less 变量，通过兼容包将 v4 变量转译成 v3 版本，并通过 less-loader 注入：
+const { theme } = require('ant-design-vue/lib');
+const convertLegacyToken = require('ant-design-vue/lib/theme/convertLegacyToken');
+const { defaultAlgorithm, defaultSeed } = theme;
+const mapToken = defaultAlgorithm(defaultSeed);
+const v3Token = convertLegacyToken.default(mapToken);
+
 // 环境变量
 // const BASE_ENV_CONFIG = loadEnv('', CWD);
 // const DEV_ENV_CONFIG = loadEnv('development', CWD);
@@ -174,9 +181,14 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           javascriptEnabled: true,
           modifyVars: {},
           additionalData: `
-            @import "ant-design-vue/lib/style/themes/default.less";
             @import "@/styles/variables.less";
           `,
+        },
+        loader: 'less-loader',
+        options: {
+          lessOptions: {
+            modifyVars: v3Token,
+          },
         },
         // scss: router{
         //   additionalData: `
