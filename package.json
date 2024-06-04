@@ -32,6 +32,7 @@
     "test:br": "npx http-server dist --cors --brotli -c-1"
   },
   "dependencies": {
+    "@ans1998/vue3-color": "^3.0.7",
     "@ant-design/icons-vue": "~6.1.0",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@vue/runtime-core": "~3.2.45",
@@ -60,6 +61,7 @@
     "swiper": "^11.0.5",
     "v-scale-screen": "^2.2.0",
     "vue": "~3.2.45",
+    "vue-color": "^2.8.1",
     "vue-echarts": "^6.2.4",
     "vue-i18n": "9.2.2",
     "vue-router": "~4.1.6",
