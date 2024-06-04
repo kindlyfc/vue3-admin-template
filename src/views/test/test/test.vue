@@ -100,6 +100,7 @@
       :afterClose="closeHandleModal"
       @ok="onSubmit"
     >
+      <input type="color" />
       <div class="pr40px">
         <a-form ref="formRef" :model="orgForm" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
           <a-form-item

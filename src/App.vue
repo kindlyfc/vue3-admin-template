@@ -1,6 +1,6 @@
 <template>
   <!-- <v-scale-screen :width="innerWidth" :height="innerHeight"> -->
-  <ConfigProvider :locale="getAntdLocale" :transform-cell-text="transformCellText">
+  <ConfigProvider :locale="getAntdLocale" :theme="theme" :transform-cell-text="transformCellText">
     <router-view #="{ Component }">
       <component :is="Component" />
     </router-view>
@@ -9,13 +9,21 @@
 </template>
 
 <script setup lang="ts">
-  import { watchEffect } from 'vue';
+  import { watch } from 'vue';
   import { useRoute } from 'vue-router';
   import { ConfigProvider } from 'ant-design-vue';
   import { transformI18n } from './hooks/useI18n';
   import { useLocale } from '@/locales/useLocale';
   import { isEmpty } from '@/utils/common';
   import VScaleScreen from 'v-scale-screen';
+  import { useUiStore } from '@/store/modules/uiConfig';
+
+  const uiStore = useUiStore();
+  const theme = uiStore.themeConfig;
+
+  watch(theme, (newVal) => {
+    console.log(newVal, 5555555);
+  });
 
   const innerWidth = 1920;
   const innerHeight = 1080;
