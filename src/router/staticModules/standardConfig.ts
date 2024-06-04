@@ -86,15 +86,6 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/quickSystemConfig/nameManage/index.vue'),
       },
       {
-        path: 'buttonManage',
-        name: `buttonManage`,
-        meta: {
-          title: '按钮管理',
-          authority: '/sys/user',
-        },
-        component: () => import('@/views/quickSystemConfig/buttonManage/index.vue'),
-      },
-      {
         path: 'modulemanage',
         name: `modulemanage`,
         meta: {

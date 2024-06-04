@@ -192,7 +192,7 @@
       /* height: calc(100vh - #{$header-height}); */
       height: calc(100vh - 120px);
       padding: 0 20px 0;
-      overflow: hidden;
+      overflow: scroll;
 
       > div {
         padding-top: 20px;
