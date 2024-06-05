@@ -7,7 +7,7 @@
       :trigger="null"
       collapsible
       :theme="getTheme"
-      class="layout-sider"
+      :style="{ background }"
     >
       <avatar />
       <asiderList />
@@ -23,8 +23,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, computed } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import { Layout } from 'ant-design-vue';
+  import { useUiStore } from '@/store/modules/uiConfig';
   // import Logo from './logo/index.vue';
   //@ts-ignore
   import avatar from './avatar/index.vue';
@@ -40,6 +41,17 @@
   import { useThemeStore } from '@/store/modules/projectConfig';
 
   const themeStore = useThemeStore();
+  const uiStore = useUiStore();
+  const background = computed(() => {
+    const colorInfo = uiStore.customConfig.colorManageWeb.find(
+      (item) => item.name === '左侧菜单栏',
+    );
+    if (colorInfo.isGradation) {
+      return `linear-gradient(${colorInfo?.lrRotb}, ${colorInfo?.color[0].hex8}, ${colorInfo?.color[1].hex8})`;
+    } else {
+      return colorInfo?.color[0].hex8;
+    }
+  });
   const collapsed = ref<boolean>(false);
   // 自定义侧边栏菜单收缩和展开时的宽度
   // const asiderWidth = computed(() => (collapsed.value ? 80 : 220));
@@ -68,6 +80,5 @@
   .ant-layout-sider {
     position: relative;
     border-radius: 0 30px 30px 0;
-    background: linear-gradient(180deg, #79dff1 0%, #74b0e4 30%, #3768ce 100%);
   }
 </style>
