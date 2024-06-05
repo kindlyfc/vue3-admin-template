@@ -68,7 +68,7 @@
         relative
       >
         <a-form-item label="颜色选择">
-          <ColorSelect @form-data-change="getColorData"></ColorSelect>
+          <ColorSelect @form-data-change="getColorData" v-model:formData="formData"></ColorSelect>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -128,6 +128,15 @@
   let name: string = '';
   const showEdit = (record) => {
     name = record.name;
+    const { color, isGradation, lrRotb } = record;
+    Object.assign(formData, { isGradation, lrRotb });
+    if (isGradation) {
+      formData.colors0 = { hex8: color[0].hex8, hex: color[0].hex, a: color[0].a };
+      formData.colors100 = { hex8: color[1].hex8, hex: color[1].hex8, a: color[1].a };
+    } else {
+      const { hex, hex8, a } = color[0];
+      formData.colors = { hex, hex8, a };
+    }
     editVisible.value = true;
   };
 
