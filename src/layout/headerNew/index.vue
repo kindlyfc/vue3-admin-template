@@ -2,7 +2,7 @@
   <Layout.Header class="layout-header">
     <div class="secondPath">
       <img src="@/assets/images/logo.png" alt="网页标题" />
-      <div class="second_content">
+      <div class="second_content" :style="{ background: topBackground }">
         <div
           v-for="item in SecondPath"
           :key="item.path"
@@ -14,8 +14,7 @@
       </div>
     </div>
     <div class="Bread_crumbs">
-      网页标题{{ firstPathName || '' }}
-      <span>{{ secondPathName || '' }}</span></div
+      网页标题{{ firstPathName || '' }} <span>{{ secondPathName || '' }}</span></div
     >
   </Layout.Header>
 </template>
@@ -25,6 +24,7 @@
   import { useRouter, useRoute } from 'vue-router';
   import { Layout, type MenuTheme } from 'ant-design-vue';
   import { useUserStore } from '@/store/modules/user';
+  import { useUiStore } from '@/store/modules/uiConfig';
   import { useKeepAliveStore } from '@/store/modules/keepAlive';
   import { LOGIN_NAME } from '@/router/constant';
 
@@ -36,6 +36,20 @@
       type: String as PropType<MenuTheme>,
     },
   });
+
+  const uiStore = useUiStore();
+  const getBGcolor = (name) => {
+    return computed(() => {
+      const colorInfo = uiStore.customConfig.colorManageWeb.find((item) => item.name === name);
+      if (colorInfo.isGradation) {
+        return `linear-gradient(${colorInfo?.lrRotb}, ${colorInfo?.color[0].hex8}, ${colorInfo?.color[1].hex8})`;
+      } else {
+        return colorInfo?.color[0].hex8;
+      }
+    });
+  };
+  const topBackground = getBGcolor('中间顶部');
+
   const firstPathName = ref<any>();
   const secondPathName = ref<any>();
   const userStore = useUserStore();

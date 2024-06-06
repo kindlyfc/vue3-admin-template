@@ -1,0 +1,1 @@
+export const headerBgColor = 'red'

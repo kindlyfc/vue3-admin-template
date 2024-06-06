@@ -17,7 +17,12 @@
       </div>
     </div>
     <div class="font-bold mb-20px">颜色自定义</div>
-    <a-table class="w-100%" :columns="columns" :data-source="dataSource" :pagination="false">
+    <a-table
+      class="w-100% mb-20px"
+      :columns="columns"
+      :data-source="dataSource"
+      :pagination="false"
+    >
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'colorShow'">
           <div class="flex">
@@ -58,6 +63,9 @@
       </template>
     </a-table>
 
+    <div class="font-bold mb-20px">主题编辑</div>
+    <officialThemeConfig></officialThemeConfig>
+
     <!-- 颜色编辑弹框 -->
     <a-modal v-model:open="editVisible" title="颜色编辑" width="600px" @ok="submitForm">
       <a-form
@@ -76,10 +84,15 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, reactive } from 'vue';
+  import { ref, reactive, onMounted } from 'vue';
   import { useUiStore } from '@/store/modules/uiConfig';
   import type { TableColumnsType } from 'ant-design-vue';
   import ColorSelect from '@/components/basic/color-select/color-select.vue';
+  import officialThemeConfig from './components/officialThemeConfig.vue';
+
+  onMounted(() => {
+    document.documentElement.style.setProperty('--table-header-bg-color', 'red');
+  });
 
   const uiStore = useUiStore();
 

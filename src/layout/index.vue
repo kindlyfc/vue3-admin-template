@@ -1,5 +1,5 @@
 <template>
-  <Layout class="layout">
+  <Layout class="layout" :style="{ background: layoutBackground }">
     <Layout.Sider
       v-if="themeStore.layout === 'sidemenu'"
       v-model:collapsed="collapsed"
@@ -7,7 +7,7 @@
       :trigger="null"
       collapsible
       :theme="getTheme"
-      :style="{ background }"
+      :style="{ background: sideBackground }"
     >
       <avatar />
       <asiderList />
@@ -42,16 +42,21 @@
 
   const themeStore = useThemeStore();
   const uiStore = useUiStore();
-  const background = computed(() => {
-    const colorInfo = uiStore.customConfig.colorManageWeb.find(
-      (item) => item.name === '左侧菜单栏',
-    );
-    if (colorInfo.isGradation) {
-      return `linear-gradient(${colorInfo?.lrRotb}, ${colorInfo?.color[0].hex8}, ${colorInfo?.color[1].hex8})`;
-    } else {
-      return colorInfo?.color[0].hex8;
-    }
-  });
+
+  const getBGcolor = (name) => {
+    return computed(() => {
+      const colorInfo = uiStore.customConfig.colorManageWeb.find((item) => item.name === name);
+      if (colorInfo.isGradation) {
+        return `linear-gradient(${colorInfo?.lrRotb}, ${colorInfo?.color[0].hex8}, ${colorInfo?.color[1].hex8})`;
+      } else {
+        return colorInfo?.color[0].hex8;
+      }
+    });
+  };
+
+  const sideBackground = getBGcolor('左侧菜单栏');
+  const layoutBackground = getBGcolor('中间主题背景');
+
   const collapsed = ref<boolean>(false);
   // 自定义侧边栏菜单收缩和展开时的宽度
   // const asiderWidth = computed(() => (collapsed.value ? 80 : 220));
@@ -65,7 +70,6 @@
     display: flex;
     height: 100vh;
     overflow: hidden;
-    background-color: #9bc0f82a !important;
 
     .ant-layout {
       overflow: hidden;

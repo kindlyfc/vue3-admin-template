@@ -1,15 +1,13 @@
 <template>
   <div class="tabs-view">
-    <div class="tabs-view-content">
-      <router-view v-slot="{ Component }">
-        <template v-if="Component">
-          <keep-alive>
-            <component :is="Component" v-if="$route.meta.keepAlive" />
-          </keep-alive>
-          <component :is="Component" v-if="!$route.meta.keepAlive" />
-        </template>
-      </router-view>
-    </div>
+    <router-view v-slot="{ Component }" class="tabs-view-content">
+      <template v-if="Component">
+        <keep-alive>
+          <component :is="Component" v-if="$route.meta.keepAlive" />
+        </keep-alive>
+        <component :is="Component" v-if="!$route.meta.keepAlive" />
+      </template>
+    </router-view>
   </div>
 </template>
 
@@ -140,6 +138,7 @@
 
   .tabs-view {
     // border-top: 1px solid #eee;
+    padding: 10px 20px;
 
     :deep(.tabs) {
       .ant-tabs-nav {
@@ -190,14 +189,10 @@
 
     .tabs-view-content {
       /* height: calc(100vh - #{$header-height}); */
-      height: calc(100vh - 120px);
-      padding: 0 20px 0;
-      overflow: scroll;
-
-      > div {
-        padding-top: 20px;
-        background: #fff;
-      }
+      height: calc(100vh - 130px);
+      padding: 20px 20px 0;
+      overflow-y: scroll;
+      background: #fff;
 
       &::-webkit-scrollbar {
         width: 0px !important;
