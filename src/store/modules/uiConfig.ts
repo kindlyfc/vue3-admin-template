@@ -35,13 +35,19 @@ export const useUiStore = defineStore({
       // 颜色配置-web端-颜色自定义
       colorManageWeb: [
         {
-          name: '左侧菜单栏', color: [{ hex: '#915E5E', hex8: '#915E5EFF', a: 1 }, { hex: '#3B2996', hex8: '#3B2996FF', a: 1 }], isGradation: true, lrRotb: 'to bottom'
+          name: '左侧菜单栏', color: [{ hex: '#3768ce', hex8: '#3768ceFF', a: 1 }, { hex: '#74b0e4', hex8: '#74b0e4FF', a: 1 }], isGradation: false, lrRotb: 'to bottom'
         },
         { name: '中间顶部', color: [{ hex: '#FFFFFF', hex8: '#FFFFFFFF', a: 1 }], isGradation: false, lrRotb: '' },
         { name: '中间主题背景', color: [{ hex: '#9bc0f8', hex8: '#9bc0f82a', a: 1 }], isGradation: false, lrRotb: '' },
         { name: '表单表头', color: [{ hex: '#FAFAFA', hex8: '#FAFAFAFF', a: 1 }], isGradation: false, lrRotb: '' },
         { name: '表单颜色（单）', color: [{ hex: '#FFFFFF', hex8: '#FFFFFFFF', a: 1 }], isGradation: false, lrRotb: '' },
         { name: '表单颜色（双）', color: [{ hex: '#FFFFFF', hex8: '#FFFFFFFF', a: 1 }], isGradation: false, lrRotb: '' },
+      ],
+      colorManageMobile: [
+        { name: '移动端登录页背景', color: [{ hex: '#FFFFFF', hex8: '#FFFFFFFF', a: 1 }], isGradation: false, lrRotb: '' },
+        { name: '移动端背景', color: [{ hex: '#9bc0f8', hex8: '#9bc0f82a', a: 1 }], isGradation: false, lrRotb: '' },
+        { name: '导航栏背景', color: [{ hex: '#FAFAFA', hex8: '#FAFAFAFF', a: 1 }], isGradation: false, lrRotb: '' },
+        { name: '菜单栏颜色', color: [{ hex: '#FFFFFF', hex8: '#FFFFFFFF', a: 1 }], isGradation: false, lrRotb: '' },
       ]
     }
   }),
