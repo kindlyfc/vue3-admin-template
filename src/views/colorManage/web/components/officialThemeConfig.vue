@@ -232,7 +232,7 @@
 
   const uiStore = useUiStore();
 
-  const open = ref(true);
+  const open = ref(false);
 
   // S 主题编辑
   const form = reactive<any>(uiStore.themeConfig.token);

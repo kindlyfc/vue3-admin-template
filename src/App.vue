@@ -21,10 +21,6 @@
   const uiStore = useUiStore();
   const theme = uiStore.themeConfig;
 
-  watch(theme, (newVal) => {
-    console.log(newVal, 5555555);
-  });
-
   const innerWidth = 1920;
   const innerHeight = 1080;
   const route = useRoute();
