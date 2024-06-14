@@ -14,7 +14,7 @@
             <div flex
               ><a-input-number
                 style="width: 300px"
-                v-model:value="formData.fonSize"
+                v-model:value="formData.fontSize"
                 placeholder="请输入字体大小"
               ></a-input-number
               ><div w40px ml10px mt3px>px</div></div
@@ -24,7 +24,7 @@
             <div flex
               ><a-input-number
                 style="width: 300px"
-                v-model:value="formData.fonSize"
+                v-model:value="formData.fontInterval"
                 placeholder="请输入字体间距"
               ></a-input-number
               ><div w40px ml10px mt4px>px</div></div
@@ -32,55 +32,10 @@
           </a-form-item>
 
           <a-form-item label="字体颜色">
-            <a-checkbox v-model:checked="formData.isGradation" class="mt6px">是否渐变</a-checkbox>
-            <a-radio-group v-show="formData.isGradation" ml20px v-model:value="formData.lrRotb">
-              <a-radio :value="1">从上到下</a-radio>
-              <a-radio :value="2" ml10px>从左往右</a-radio>
-            </a-radio-group>
-            <div v-show="!formData.isGradation" mt20px flex>
-              <div
-                class="color_box"
-                :style="{ backgroundColor: formData.colors?.hex8 }"
-                @click="formData.colorsShow = !formData.colorsShow"
-              />
-              <span ml10px mt2px>{{ formData.colors?.hex8 }}</span></div
-            >
-
-            <div v-show="formData.isGradation" mt20px flex>
-              <span mt2px>0%处: </span>
-              <div
-                ml4px
-                class="color_box"
-                @click="formData.colorsShow0 = !formData.colorsShow0"
-                :style="{ backgroundColor: formData.colors0?.hex8 }"
-              /><span ml6px mt2px>{{ formData.colors0?.hex8 }}</span>
-              <span mt2px ml20px>100%处:</span>
-              <div
-                ml4px
-                class="color_box"
-                :style="{ backgroundColor: formData.colors100?.hex8 }"
-                @click="formData.colorsShow100 = !formData.colorsShow100"
-              />
-              <span ml6px mt2px>{{ formData.colors100?.hex8 }}</span></div
-            >
-            <Sketch
-              v-if="formData.colorsShow && !formData.isGradation"
-              class="sketch"
-              v-model="formData.colors"
-              @changButton="changeColor(1)"
-            />
-            <Sketch
-              v-if="formData.colorsShow0 && formData.isGradation"
-              class="sketch ml42px"
-              v-model="formData.colors0"
-              @changButton="changeColor(2)"
-            />
-            <Sketch
-              v-if="formData.colorsShow100 && formData.isGradation"
-              class="sketch ml182px"
-              v-model="formData.colors100"
-              @changButton="changeColor(3)"
-            />
+            <ColorSelect
+              @form-data-change="getColorData"
+              v-model:formData="formDataColor"
+            ></ColorSelect>
           </a-form-item>
         </a-form>
         <div class="mb30px mt40px text-center">
@@ -96,43 +51,100 @@
 
 <script setup lang="ts">
   import { reactive, ref } from 'vue';
-  import { Sketch } from '@ans1998/vue3-color';
+  import ColorSelect from '@/components/basic/color-select/color-select.vue';
+  import { getModule, editModule } from '@/api/uiConfig';
+  import { message } from 'ant-design-vue';
+
   const formData = reactive<any>({
-    fonSize: '',
-    interval: '',
-    fontColor: '',
-    isGradation: false,
-    lrRotb: 1,
-    /* 颜色选择器 */
-    colors: {},
-    colorsShow: false,
-    /* 颜色选择器0% */
-    colors0: {},
-    colorsShow0: false,
-    /* 颜色选择器100% */
-    colors100: {},
-    colorsShow100: false,
+    id: null,
+    fontSize: null,
+    fontInterval: null,
   });
+
+  const initColor = () => ({
+    hex8: '#FFFFFFFF',
+    hex: '#FFFFFF',
+    a: 1,
+  });
+  const initFormColor = () => {
+    return {
+      isGradation: false,
+      lrRotb: '',
+      /* 颜色选择器 */
+      colors: initColor(),
+      colorsShow: false,
+      /* 颜色选择器0% */
+      colors0: initColor(),
+      colorsShow0: false,
+      /* 颜色选择器100% */
+      colors100: initColor(),
+      colorsShow100: false,
+    };
+  };
+  const formDataColor = reactive<any>(initFormColor());
   const formRef = ref();
   const tableLoading = ref<boolean>(false);
   const submitLoading = ref<boolean>(false);
-  const getList = () => {};
-  const Submit = () => {};
-
-  const changeColor = (type) => {
-    switch (type) {
-      case 1:
-        formData.colorsShow = false;
-        break;
-      case 2:
-        formData.colorsShow0 = false;
-        break;
-      case 3:
-        formData.colorsShow100 = false;
-        break;
-      default:
-        break;
-    }
+  const getList = () => {
+    getModule().then((res) => {
+      const {
+        id,
+        fontSize,
+        fontInterval,
+        gradient,
+        gradientType,
+        startGradientColor,
+        endGradientColor,
+      } = res;
+      Object.assign(formData, {
+        id,
+        fontSize,
+        fontInterval,
+      });
+      formDataColor.colors.hex8 = gradient == 1 ? '' : startGradientColor;
+      formDataColor.colors0.hex8 = gradient == 1 ? startGradientColor : '';
+      formDataColor.colors100.hex8 = gradient == 1 ? endGradientColor : '';
+      formDataColor.isGradation = gradient == 1 ? true : false;
+      formDataColor.lrRotb = gradientType == 1 ? 'to bottom' : gradientType == 2 ? 'to right' : '';
+    });
+  };
+  getList();
+  const Submit = () => {
+    formRef.value.validate().then((res) => {
+      const { id, fontInterval, fontSize } = formData;
+      const { colors, colors0, colors100, isGradation, lrRotb } = formDataColor;
+      const data = {
+        id,
+        fontInterval,
+        fontSize,
+        startGradientColor: isGradation ? colors0.hex8 : colors.hex8,
+        endGradientColor: isGradation ? colors100.hex8 : colors.hex8,
+        gradient: isGradation ? 1 : 0,
+        gradientType: lrRotb == 'to bottom' ? 1 : lrRotb == 'to right' ? 2 : '',
+      };
+      tableLoading.value = true;
+      editModule(data)
+        .then((res) => {
+          message.success('操作成功');
+          getList();
+          clearForm();
+        })
+        .finally(() => {
+          tableLoading.value = false;
+        });
+    });
+  };
+  const clearForm = () => {
+    Object.assign(formData, {
+      id: null,
+      fontSize: null,
+      fontInterval: null,
+    });
+    Object.assign(formDataColor, initFormColor());
+    formRef.value.resetFields();
+  };
+  const getColorData = (data) => {
+    Object.assign(formDataColor, data);
   };
 </script>
 
@@ -165,13 +177,7 @@
     border-radius: 4px;
   }
 
-  .sketch {
-    position: absolute;
-    margin-top: 10px;
-    z-index: 100000;
-  }
-
-  :deep(.vc-botton-right) {
-    display: none !important;
-  }
+  // :deep(.vc-botton-right) {
+  //   display: none !important;
+  // }
 </style>

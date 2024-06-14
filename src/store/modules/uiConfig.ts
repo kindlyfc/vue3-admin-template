@@ -7,6 +7,8 @@ import { store } from '@/store'
 interface UiState {
   themeConfig: any
   customConfig: any
+  systemNameConfig: any
+  systemLogoConfig: any
 }
 
 export const useUiStore = defineStore({
@@ -43,6 +45,17 @@ export const useUiStore = defineStore({
         { name: '表单颜色（单）', color: [{ hex: '#FFFFFF', hex8: '#FFFFFFFF', a: 1 }], isGradation: false, lrRotb: '' },
         { name: '表单颜色（双）', color: [{ hex: '#FFFFFF', hex8: '#FFFFFFFF', a: 1 }], isGradation: false, lrRotb: '' },
       ]
+    },
+    //系统名称配置
+    systemNameConfig: {
+      webLogin: null,
+      webTop: null,
+    },
+    //系统LOGO配置
+    systemLogoConfig: {
+      webLogin: null,
+      webTop: null,
+      webSysTem: null
     }
   }),
   getters: {
@@ -62,6 +75,10 @@ export const useUiStore = defineStore({
     // 主题编辑
     themeEdit(data) {
       this.themeConfig.token = data
+    },
+    //获取系统名称/LOGO
+    getNameORLogo() {
+      // return getSysteminfo()
     }
   }
 })

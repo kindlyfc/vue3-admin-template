@@ -19,7 +19,7 @@ export function createRouterGuards(router: Router, whiteNameList: WhiteNameList)
     const userStore = useUserStore();
 
     const token = Storage.get(ACCESS_TOKEN_KEY, null);
-    if (token) {
+    if (true) {
       if (to.name === LOGIN_NAME) {
         next({ path: defaultRoutePath });
       } else if (to.path === '/error/404') {

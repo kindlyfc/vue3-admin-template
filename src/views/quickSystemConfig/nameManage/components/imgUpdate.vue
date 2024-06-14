@@ -1,12 +1,15 @@
 <template>
   <div>
     <a-upload
-      name="avatar"
       class="avatar-uploader"
       :disabled="defaultFileList.length >= props.limit || imageUrl.length >= props.limit"
       :before-upload="beforeUpload"
       :default-file-list="defaultFileList"
       @change="handleChange"
+      action="/api/v1/common/upload"
+      name="file"
+      :headers="headers"
+      accept=".jpg,.jpeg,.png"
     >
       <div v-loading="loading" class="img_item defaultimg">
         <img
@@ -28,7 +31,7 @@
     </a-upload>
     <div class="tips" v-if="props.tipsText">
       <img src="@/assets/images/tost.png" alt="" />{{
-        props.tipsText || '最多上传三张照片（只支持JPG、 JPEG、PNG,大小不超过5M'
+        props.tipsText || '最多上传三张照片(只支持JPG、 JPEG、PNG,大小不超过5M)'
       }}
     </div>
     <div v-if="imageUrl.length > 0 && props.limit > 1" class="flex justify-between flex-wrap">
@@ -57,12 +60,19 @@
   import { ref, onMounted } from 'vue';
   import { message } from 'ant-design-vue';
   import chooseUrl from '@/assets/images/update.png';
+  import { upDateFile } from '@/api/uiConfig';
+  import { Storage } from '@/utils/Storage';
+  import { ACCESS_TOKEN_KEY } from '@/enums/cacheEnum';
   const imageUrl = ref<any>([]);
   const loading = ref<boolean>(false);
   const previewVisible = ref<boolean>(false);
   const defaultFileList = ref<any>([]);
   const files = ref<any>([]);
   const previewImage = ref<any>('');
+  const token = Storage.get(ACCESS_TOKEN_KEY);
+  const headers = ref({
+    Authorization: `Bearer ${token}`,
+  });
   const props = defineProps({
     tipsText: {
       //文本
@@ -86,7 +96,7 @@
       //禁止使用base64格式，使用file格式
       type: Boolean,
       required: false,
-      default: false,
+      default: true,
     },
   });
   onMounted(() => {
@@ -95,6 +105,10 @@
       if (props.prohibitBase64) {
         files.value.push(...props.echoList);
       }
+    } else {
+      files.value = [];
+      imageUrl.value = [];
+      defaultFileList.value = [];
     }
   });
 
@@ -124,17 +138,23 @@
   };
 
   const handleChange = (info) => {
+    console.log(info, 888);
     if (info.file.status === 'uploading') {
       loading.value = true;
       return;
     }
 
     if (props.prohibitBase64) {
-      const windowURL: any = window.url || window.webkitURL;
-      const dataimgurl = windowURL.createObjectURL(info.file.originFileObj);
+      const windowURL: any = window?.url || window.webkitURL;
+      const dataImgurl = windowURL.createObjectURL(info.file.originFileObj);
       files.value.push(info.file.originFileObj);
-      imageUrl.value.push(dataimgurl);
-      emit('update:value', files);
+      imageUrl.value.push(dataImgurl);
+      if (props.limit == 1) {
+        emit('update:value', info.file.response.data?.fileUrl);
+        return;
+      }
+      emit('update:value', info.file.response.data);
+      loading.value = false;
       return;
     }
 

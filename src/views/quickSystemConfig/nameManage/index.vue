@@ -3,17 +3,32 @@
     <div class="ca_region">
       <div class="titleSty">系统名称</div>
       <a-table
-        :columns="columns1"
+        :columns="columns"
         :row-key="(record) => record.id"
-        :data-source="dataSource1"
+        :data-source="dataSource"
         :scroll="{ y: '62vh' }"
         :loading="tableLoading1"
         :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : undefined)"
       >
         <template #bodyCell="{ column, record }">
+          <template v-if="column.key === 'textColor'">
+            <div
+              class="color_box"
+              :style="`background-image: linear-gradient( ${
+                record.gradientType == 1 ? 'to bottom' : 'to right'
+              },${record.startGradientColor},${record.endGradientColor});`"
+            >
+            </div>
+          </template>
+          <template v-if="column.key === 'fontSize'">
+            <span>{{ record.fontSize || '--' }} px</span>
+          </template>
+          <template v-if="column.key === 'fontInterval'">
+            <span>{{ record.fontInterval || '--' }} px</span>
+          </template>
           <template v-if="column.key === 'operation'">
             <div>
-              <a-button type="link" @click="editUs1()">编辑</a-button>
+              <a-button type="link" @click="editUs(record)">编辑</a-button>
             </div>
           </template>
         </template>
@@ -23,25 +38,23 @@
     <div class="ca_region">
       <div class="titleSty">系统LOGO</div>
       <div flex>
-        <div relative m20px mr60px @click="showUpdateImg('web端登录页系统名称')">
-          <img w240px h164px :src="chooseUrl" alt="" />
-          <img class="deleteIcon" src="@/assets/images/shanchu.png" alt="" />
-          <div text-center mt4px>200px*200px</div>
-          <div text-center mt4px>web端登录页系统名称</div>
-        </div>
-
-        <div relative m20px mr60px @click="showUpdateImg('移动端登录页系统名称')">
-          <img w240px h164px :src="chooseUrl" alt="" />
-          <img class="deleteIcon" src="@/assets/images/shanchu.png" alt="" />
-          <div text-center mt4px>100px*100px</div>
-          <div text-center mt4px>移动端登录页系统名称</div>
-        </div>
-
-        <div relative m20px @click="showUpdateImg('web端平台系统名称')">
-          <img w240px h164px :src="chooseUrl" alt="" />
-          <img class="deleteIcon" src="@/assets/images/shanchu.png" alt="" />
-          <div text-center mt4px>200px*200px</div>
-          <div text-center mt4px>web端平台系统名称</div>
+        <div relative m20px mr60px v-for="item in dataSourceLogo" :key="item.namePositionCode">
+          <img
+            w240px
+            h164px
+            :src="item.imageUrl || chooseUrl"
+            alt=""
+            @click="item.imageUrl ? '' : showUpdateImg(item)"
+          />
+          <img
+            v-if="item.imageUrl"
+            class="deleteIcon"
+            src="@/assets/images/shanchu.png"
+            alt=""
+            @click="item.imageUrl = null"
+          />
+          <div text-center mt4px>{{ item.width || '--' }} X {{ item.height || '--' }}</div>
+          <div text-center mt4px>{{ item.namePosition || '--' }}</div>
         </div>
       </div>
     </div>
@@ -49,18 +62,23 @@
     <div class="ca_region">
       <div class="titleSty">登录背景图</div>
       <div flex>
-        <div relative m20px mr60px @click="showUpdateImg('web端登录页')">
-          <img w240px h164px :src="chooseUrl" alt="" />
-          <img class="deleteIcon" src="@/assets/images/shanchu.png" alt="" />
-          <div text-center mt4px>200px*200px</div>
-          <div text-center mt4px>web端登录页</div>
-        </div>
-
-        <div relative m20px mr60px @click="showUpdateImg('移动端登录页')">
-          <img w240px h164px :src="chooseUrl" alt="" />
-          <img class="deleteIcon" src="@/assets/images/shanchu.png" alt="" />
-          <div text-center mt4px>100px*100px</div>
-          <div text-center mt4px>移动端登录页</div>
+        <div relative m20px mr60px v-for="item in dataSourceBgImg" :key="item.namePositionCode">
+          <img
+            w240px
+            h164px
+            :src="item.imageUrl || chooseUrl"
+            alt=""
+            @click="item.imageUrl ? '' : showUpdateImg(item)"
+          />
+          <img
+            v-if="item.imageUrl"
+            class="deleteIcon"
+            src="@/assets/images/shanchu.png"
+            @click="item.imageUrl = null"
+            alt=""
+          />
+          <div text-center mt4px>{{ item.width || '--' }} X {{ item.height || '--' }}</div>
+          <div text-center mt4px>{{ item.namePosition || '--' }}</div>
         </div>
       </div>
     </div>
@@ -69,8 +87,9 @@
       v-model:visible="EidtVisible"
       :width="600"
       title="名称编辑"
-      centeredzl
-      @cancel="() => {}"
+      @cancel="clearForm()"
+      centered
+      @ok="sbumit"
     >
       <a-form
         ref="formRef"
@@ -80,67 +99,30 @@
         relative
       >
         <a-form-item label="名称位置">
-          <a-input style="width: 300px" v-model:value="formData.fonSize" disabled></a-input>
+          <a-input style="width: 300px" v-model:value="formData.namePosition" disabled></a-input>
         </a-form-item>
-        <a-form-item label="标题名称">
-          <a-input style="width: 300px" v-model:value="formData.fonSize"></a-input>
+        <a-form-item
+          label="标题名称"
+          name="titleName"
+          :rules="{ required: true, message: '请输入标题名称' }"
+        >
+          <a-input
+            style="width: 300px"
+            placeholder="请输入标题名称"
+            v-model:value="formData.titleName"
+          ></a-input>
         </a-form-item>
         <a-form-item label="字体颜色">
-          <a-checkbox v-model:checked="formData.isGradation" class="mt6px">是否渐变</a-checkbox>
-          <a-radio-group v-show="formData.isGradation" ml20px v-model:value="formData.lrRotb">
-            <a-radio :value="1">从上到下</a-radio>
-            <a-radio :value="2" ml10px>从左往右</a-radio>
-          </a-radio-group>
-          <div v-show="!formData.isGradation" mt20px flex>
-            <div
-              class="color_box"
-              :style="{ backgroundColor: formData.colors?.hex8 }"
-              @click="formData.colorsShow = !formData.colorsShow"
-            />
-            <span ml10px mt2px>{{ formData.colors?.hex8 }}</span></div
-          >
-
-          <div v-show="formData.isGradation" mt20px flex>
-            <span mt2px>0%处: </span>
-            <div
-              ml4px
-              class="color_box"
-              @click="formData.colorsShow0 = !formData.colorsShow0"
-              :style="{ backgroundColor: formData.colors0?.hex8 }"
-            /><span ml6px mt2px>{{ formData.colors0?.hex8 }}</span>
-            <span mt2px ml20px>100%处:</span>
-            <div
-              ml4px
-              class="color_box"
-              :style="{ backgroundColor: formData.colors100?.hex8 }"
-              @click="formData.colorsShow100 = !formData.colorsShow100"
-            />
-            <span ml6px mt2px>{{ formData.colors100?.hex8 }}</span></div
-          >
-          <Sketch
-            v-if="formData.colorsShow && !formData.isGradation"
-            class="sketch"
-            v-model="formData.colors"
-            @changButton="changeColor(1)"
-          />
-          <Sketch
-            v-if="formData.colorsShow0 && formData.isGradation"
-            class="sketch ml42px"
-            v-model="formData.colors0"
-            @changButton="changeColor(2)"
-          />
-          <Sketch
-            v-if="formData.colorsShow100 && formData.isGradation"
-            class="sketch ml182px"
-            v-model="formData.colors100"
-            @changButton="changeColor(3)"
-          />
+          <ColorSelect
+            @form-data-change="getColorData"
+            v-model:formData="formDataColor"
+          ></ColorSelect>
         </a-form-item>
         <a-form-item label="字体大小">
           <div flex
             ><a-input-number
               style="width: 300px"
-              v-model:value="formData.fonSize"
+              v-model:value="formData.fontSize"
               placeholder="请输入字体大小"
             ></a-input-number
             ><div w40px ml10px mt3px>px</div></div
@@ -150,7 +132,7 @@
           <div flex
             ><a-input-number
               style="width: 300px"
-              v-model:value="formData.fonSize"
+              v-model:value="formData.fontInterval"
               placeholder="请输入字体间距"
             ></a-input-number
             ><div w40px ml10px mt4px>px</div></div
@@ -164,8 +146,9 @@
       v-model:visible="EidtVisible1"
       :width="580"
       title="LOGO图片编辑"
-      centeredzl
-      @cancel="() => {}"
+      centered
+      @cancel="clearForm()"
+      @ok="imgSbumit"
     >
       <a-form
         ref="formRef"
@@ -175,30 +158,46 @@
         relative
       >
         <a-form-item label="logo位置">
-          <a-input style="width: 300px" v-model:value="logoData.name" disabled></a-input>
+          <a-input style="width: 300px" v-model:value="logoData.namePosition" disabled></a-input>
         </a-form-item>
-        <a-form-item label="logo长度">
+        <a-form-item
+          label="logo高度"
+          name="height"
+          :rules="{ required: true, message: '输入logo高度' }"
+        >
           <div flex
             ><a-input-number
               style="width: 300px"
-              v-model:value="logoData.logoH"
+              v-model:value="logoData.height"
               placeholder="请输入字体大小"
             ></a-input-number
             ><div w40px ml10px mt3px>px</div></div
           >
         </a-form-item>
-        <a-form-item label="logo宽度">
+        <a-form-item
+          label="logo宽度"
+          name="width"
+          :rules="{ required: true, message: '输入logo宽度' }"
+        >
           <div flex
             ><a-input-number
               style="width: 300px"
-              v-model:value="logoData.logoW"
+              v-model:value="logoData.width"
               placeholder="请输入字体间距"
             ></a-input-number
             ><div w40px ml10px mt4px>px</div></div
           >
         </a-form-item>
-        <a-form-item label="图片">
-          <imgUpdate v-model:value="logoData.img" />
+        <a-form-item
+          label="图片"
+          :rules="{ required: true, message: '请上传图片' }"
+          name="imageUrl"
+        >
+          <imgUpdate
+            v-if="EidtVisible1"
+            v-model:value="logoData.imageUrl"
+            :echoList="[logoData.imageUrl]"
+          />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -207,71 +206,85 @@
 
 <script setup lang="ts">
   import { reactive, ref } from 'vue';
-  import { Sketch } from '@ans1998/vue3-color';
   import chooseUrl from '@/assets/images/update.png';
   import imgUpdate from './components/imgUpdate.vue';
-  import type { log } from 'console';
-
-  const searchForm = reactive<any>({
-    name: '',
-  });
+  import ColorSelect from '@/components/basic/color-select/color-select.vue';
+  import { nameList, editName, imgList, editLogo } from '@/api/uiConfig';
+  import { message } from 'ant-design-vue';
   const formData = reactive<any>({
-    fonSize: '',
-    interval: '',
-    fontColor: '',
-    isGradation: false,
-    lrRotb: 1,
-    /* 颜色选择器 */
-    colors: {},
-    colorsShow: false,
-    /* 颜色选择器0% */
-    colors0: {},
-    colorsShow0: false,
-    /* 颜色选择器100% */
-    colors100: {},
-    colorsShow100: false,
+    namePositionCode: '',
+    namePosition: '',
+    fontSize: '',
+    titleName: '',
+    fontInterval: '',
   });
+  const initColor = () => ({
+    hex8: '#FFFFFFFF',
+    hex: '#FFFFFF',
+    a: 1,
+  });
+  const initFormColor = () => {
+    return {
+      isGradation: false,
+      lrRotb: '',
+      /* 颜色选择器 */
+      colors: initColor(),
+      colorsShow: false,
+      /* 颜色选择器0% */
+      colors0: initColor(),
+      colorsShow0: false,
+      /* 颜色选择器100% */
+      colors100: initColor(),
+      colorsShow100: false,
+    };
+  };
+
+  const formDataColor = reactive<any>(initFormColor());
 
   const logoData = reactive<any>({
-    logoW: '',
-    logoH: '',
-    name: '',
-    img: '',
+    namePositionCode: '',
+    namePosition: '',
+    height: null,
+    width: null,
+    imageUrl: '',
   });
+
   const formRef = ref();
   const tableLoading1 = ref<boolean>(false);
   const EidtVisible = ref<boolean>(false);
   const EidtVisible1 = ref<boolean>(false);
-  const dataSource1 = ref<any>([]);
-  const columns1 = ref<any>([
+  const dataSource = ref<any>([]);
+  const dataSourceBgImg = ref<any>([]);
+  const dataSourceLogo = ref<any>([]);
+  const columns = ref<any>([
     {
       title: '名称位置',
-      dataIndex: 'deviceName',
-      key: 'deviceName',
+      dataIndex: 'namePosition',
+      key: 'namePosition',
       align: 'center',
     },
     {
       title: '标题名称',
-      dataIndex: 'departmentName',
-      key: 'departmentName',
+      dataIndex: 'titleName',
+      key: 'titleName',
       align: 'center',
     },
     {
       title: '字体颜色',
-      dataIndex: 'routeAddr',
-      key: 'routeAddr',
+      dataIndex: 'textColor',
+      key: 'textColor',
       align: 'center',
     },
     {
       title: '字体大小',
-      dataIndex: 'macAddr',
-      key: 'macAddr',
+      dataIndex: 'fontSize',
+      key: 'fontSize',
       align: 'center',
     },
     {
       title: '字体间距',
-      dataIndex: 'macAddr',
-      key: 'macAddr',
+      dataIndex: 'fontInterval',
+      key: 'fontInterval',
       align: 'center',
     },
     {
@@ -283,28 +296,117 @@
     },
   ]);
 
-  const getList1 = () => {};
-  const editUs1 = () => {};
-
-  const changeColor = (type) => {
-    switch (type) {
-      case 1:
-        formData.colorsShow = false;
-        break;
-      case 2:
-        formData.colorsShow0 = false;
-        break;
-      case 3:
-        formData.colorsShow100 = false;
-        break;
-      default:
-        break;
-    }
+  const getColorData = (data) => {
+    Object.assign(formDataColor, data);
+  };
+  const getList = () => {
+    nameList().then((res) => {
+      dataSource.value = res;
+    });
+  };
+  const getList1 = () => {
+    imgList().then((res) => {
+      dataSourceBgImg.value = res?.filter((v) => v.type == 2);
+      dataSourceLogo.value = res?.filter((v) => v.type == 1);
+    });
   };
 
-  const showUpdateImg = (name) => {
-    logoData.name = name;
+  getList();
+  getList1();
+  const editUs = (record) => {
+    const {
+      namePosition,
+      titleName,
+      fontInterval,
+      fontSize,
+      startGradientColor,
+      namePositionCode,
+      endGradientColor,
+      gradient,
+      gradientType,
+    } = record;
+    formData.namePosition = namePosition;
+    Object.assign(formData, { namePositionCode, namePosition, fontSize, fontInterval, titleName });
+    formDataColor.colors.hex8 = gradient == 1 ? '' : startGradientColor;
+    formDataColor.colors0.hex8 = gradient == 1 ? startGradientColor : '';
+    formDataColor.colors100.hex8 = gradient == 1 ? endGradientColor : '';
+    formDataColor.isGradation = gradient == 1 ? true : false;
+    formDataColor.lrRotb = gradientType == 1 ? 'to bottom' : gradientType == 2 ? 'to right' : '';
+    EidtVisible.value = true;
+  };
+
+  const sbumit = () => {
+    formRef.value.validate().then((res) => {
+      const { namePosition, titleName, fontInterval, fontSize, namePositionCode } = formData;
+      const { colors, colors0, colors100, isGradation, lrRotb } = formDataColor;
+      const data = {
+        namePosition,
+        titleName,
+        fontInterval,
+        fontSize,
+        startGradientColor: isGradation ? colors0.hex8 : colors.hex8,
+        namePositionCode,
+        endGradientColor: isGradation ? colors100.hex8 : colors.hex8,
+        gradient: isGradation ? 1 : 0,
+        gradientType: lrRotb == 'to bottom' ? 1 : lrRotb == 'to right' ? 2 : '',
+      };
+      editName(data).then((res) => {
+        message.success('操作成功');
+        EidtVisible.value = false;
+        getList();
+        clearForm();
+      });
+    });
+  };
+
+  const showUpdateImg = (record) => {
+    const { namePositionCode, namePosition, height, width, imageUrl } = record;
+    Object.assign(logoData, {
+      namePositionCode,
+      namePosition,
+      height,
+      width,
+      imageUrl,
+    });
     EidtVisible1.value = true;
+  };
+
+  const imgSbumit = () => {
+    formRef.value.validate().then((res) => {
+      const { namePositionCode, namePosition, height, width, imageUrl } = logoData;
+      const data = {
+        namePositionCode,
+        namePosition,
+        height,
+        width,
+        imageUrl,
+      };
+      editLogo(data).then((res) => {
+        message.success('操作成功');
+        EidtVisible1.value = false;
+        getList1();
+        clearForm();
+      });
+    });
+  };
+
+  const clearForm = () => {
+    Object.assign(logoData, {
+      namePositionCode: '',
+      namePosition: '',
+      height: null,
+      width: null,
+      imageUrl: null,
+    });
+    Object.assign(formData, {
+      namePositionCode: '',
+      namePosition: '',
+      fontSize: '',
+      titleName: '',
+      fontInterval: '',
+    });
+    Object.assign(formDataColor, initFormColor());
+    formRef.value.resetFields();
   };
 </script>
 
@@ -330,17 +432,12 @@
     height: 26px;
     border: 1px solid #dfd9d9;
     border-radius: 4px;
+    margin: 0 auto;
   }
 
-  .sketch {
-    position: absolute;
-    margin-top: 10px;
-    z-index: 100000;
-  }
-
-  :deep(.vc-botton-right) {
-    display: none !important;
-  }
+  // :deep(.vc-botton-right) {
+  //   display: none !important;
+  // }
 
   .deleteIcon {
     position: absolute;

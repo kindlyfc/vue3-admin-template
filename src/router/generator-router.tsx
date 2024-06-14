@@ -72,23 +72,20 @@ const filterMenus = (data, menusArr) => {
  */
 export const generatorDynamicRouter = () => {
   try {
-    const U_MENU = Storage.get(USER_MENU);
-    const ex = 7 * 24 * 60 * 60 * 1000;
-    const menuArr = getListMenus(U_MENU);
-    // const menuArr = U_MENU;
-    /** 登录成功保存菜单 */
-    Storage.set(USER_MENUARR, menuArr, ex);
+    // const U_MENU = Storage.get(USER_MENU);
+    // const ex = 7 * 24 * 60 * 60 * 1000;
+    // const menuArr = getListMenus(U_MENU);
+    // /** 登录成功保存菜单 */
+    // Storage.set(USER_MENUARR, menuArr, ex);
     const layout = routes.find((item) => item.name == 'Layout')!;
     const commonMenus = cloneDeep(common);
 
-    // console.log('菜单数据：', menuArr);
-
-    const functionMenu = [...filterMenus(commonMenus, menuArr)].map((v) => {
-      if (!!v.children && v.children?.length > 0) {
-        v.redirect = `${v?.path}/${v?.children[0]?.path}`;
-      }
-      return v;
-    });
+    // const functionMenu = [...filterMenus(commonMenus, menuArr)].map((v) => {
+    //   if (!!v.children && v.children?.length > 0) {
+    //     v.redirect = `${v?.path}/${v?.children[0]?.path}`;
+    //   }
+    //   return v;
+    // });
 
     // const menus = [...functionMenu, ...endRoutes];
     const menus = [...commonMenus, ...endRoutes]; //暂时屏蔽权限

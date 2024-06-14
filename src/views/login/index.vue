@@ -1,5 +1,5 @@
 <template>
-  <div class="login-box">
+  <div class="login-box" :style="`background: url(${bgImg}) no-repeat; background-size: 100%;`">
     <div class="login-center">
       <div class="login-logo">
         <img src="@/assets/images/logo.png" alt="网页标题" />
@@ -94,7 +94,9 @@
   import { Base64 } from 'js-base64';
   import { message, Modal } from 'ant-design-vue';
   import { useUserStore } from '@/store/modules/user';
+  import { useUiStore } from '@/store/modules/uiConfig';
   import { getImageCaptcha, getToken } from '@/api/login';
+  import bgImg from '@/assets/images/bgimg.png';
   import { to } from '@/utils/awaitTo';
   const state = reactive({
     loading: false,
@@ -105,12 +107,14 @@
       captcha: '',
     },
   });
-  const temporarytoken = ref<string>('');
 
+  const uiStore = useUiStore();
+  const systemName = uiStore.systemNameConfig;
+  const systemLogo = uiStore.systemLogoConfig;
+  const temporarytoken = ref<string>('');
   const route = useRoute();
   const router = useRouter();
   const focusIcon = ref<string>();
-
   const userStore = useUserStore();
 
   const setCaptcha = async () => {
@@ -165,8 +169,6 @@
     width: 100vw;
     height: 100vh;
     padding-right: 100px;
-    background: url('@/assets/images/bgimg.png') no-repeat;
-    background-size: 100%;
     flex-direction: column;
     align-items: end;
     justify-content: center;

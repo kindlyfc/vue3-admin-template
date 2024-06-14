@@ -20,6 +20,7 @@
 
   const uiStore = useUiStore();
   const theme = uiStore.themeConfig;
+  uiStore.getNameORLogo(); //打开系统直接获取名称/LOGO
 
   watch(theme, (newVal) => {
     console.log(newVal, 5555555);
