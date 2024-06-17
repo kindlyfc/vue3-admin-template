@@ -42,17 +42,17 @@
           <img
             w240px
             h164px
-            :src="item.imageUrl || chooseUrl"
+            :src="item.imageUrl ? item.url : chooseUrl"
             alt=""
-            @click="item.imageUrl ? '' : showUpdateImg(item)"
+            @click="showUpdateImg(item)"
           />
-          <img
+          <!-- <img
             v-if="item.imageUrl"
             class="deleteIcon"
             src="@/assets/images/shanchu.png"
             alt=""
             @click="item.imageUrl = null"
-          />
+          /> -->
           <div text-center mt4px>{{ item.width || '--' }} X {{ item.height || '--' }}</div>
           <div text-center mt4px>{{ item.namePosition || '--' }}</div>
         </div>
@@ -66,18 +66,20 @@
           <img
             w240px
             h164px
-            :src="item.imageUrl || chooseUrl"
+            :src="item.imageUrl ? item.url : chooseUrl"
             alt=""
-            @click="item.imageUrl ? '' : showUpdateImg(item)"
+            @click="showUpdateImg(item)"
           />
-          <img
+          <!-- <img
             v-if="item.imageUrl"
             class="deleteIcon"
             src="@/assets/images/shanchu.png"
             @click="item.imageUrl = null"
             alt=""
-          />
-          <div text-center mt4px>{{ item.width || '--' }} X {{ item.height || '--' }}</div>
+          /> -->
+          <div v-if="item.namePositionCode != 'web_login_backend'" text-center mt4px
+            >{{ item.width || '--' }} X {{ item.height || '--' }}</div
+          >
           <div text-center mt4px>{{ item.namePosition || '--' }}</div>
         </div>
       </div>
@@ -161,6 +163,7 @@
           <a-input style="width: 300px" v-model:value="logoData.namePosition" disabled></a-input>
         </a-form-item>
         <a-form-item
+          v-if="logoData.namePositionCode != 'web_login_backend'"
           label="logo高度"
           name="height"
           :rules="{ required: true, message: '输入logo高度' }"
@@ -169,12 +172,13 @@
             ><a-input-number
               style="width: 300px"
               v-model:value="logoData.height"
-              placeholder="请输入字体大小"
+              placeholder="请输入logo高度"
             ></a-input-number
             ><div w40px ml10px mt3px>px</div></div
           >
         </a-form-item>
         <a-form-item
+          v-if="logoData.namePositionCode != 'web_login_backend'"
           label="logo宽度"
           name="width"
           :rules="{ required: true, message: '输入logo宽度' }"
@@ -183,7 +187,7 @@
             ><a-input-number
               style="width: 300px"
               v-model:value="logoData.width"
-              placeholder="请输入字体间距"
+              placeholder="请输入logo宽度"
             ></a-input-number
             ><div w40px ml10px mt4px>px</div></div
           >
@@ -196,7 +200,7 @@
           <imgUpdate
             v-if="EidtVisible1"
             v-model:value="logoData.imageUrl"
-            :echoList="[logoData.imageUrl]"
+            :echoList="[IMAGPATH + logoData.imageUrl]"
           />
         </a-form-item>
       </a-form>
@@ -210,7 +214,10 @@
   import imgUpdate from './components/imgUpdate.vue';
   import ColorSelect from '@/components/basic/color-select/color-select.vue';
   import { nameList, editName, imgList, editLogo } from '@/api/uiConfig';
+  import { useUiStore } from '@/store/modules/uiConfig';
   import { message } from 'ant-design-vue';
+  const IMAGPATH = ref(import.meta.env.VITE_BASE_IMAGE_PATH);
+  const uiStore = useUiStore();
   const formData = reactive<any>({
     namePositionCode: '',
     namePosition: '',
@@ -299,16 +306,28 @@
   const getColorData = (data) => {
     Object.assign(formDataColor, data);
   };
-  const getList = () => {
-    nameList().then((res) => {
-      dataSource.value = res;
-    });
+  const getList = async () => {
+    // nameList().then((res) => {
+    const res = await uiStore.getSysName();
+    dataSource.value = res;
+    // });
   };
-  const getList1 = () => {
-    imgList().then((res) => {
-      dataSourceBgImg.value = res?.filter((v) => v.type == 2);
-      dataSourceLogo.value = res?.filter((v) => v.type == 1);
-    });
+  const getList1 = async () => {
+    // imgList().then((res) => {
+    const res = await uiStore.getSysLogo();
+    dataSourceBgImg.value = res
+      ?.filter((v) => v.type == 2)
+      .map((v) => {
+        v.url = import.meta.env.VITE_BASE_IMAGE_PATH + v.imageUrl;
+        return v;
+      });
+    dataSourceLogo.value = res
+      ?.filter((v) => v.type == 1)
+      .map((v) => {
+        v.url = import.meta.env.VITE_BASE_IMAGE_PATH + v.imageUrl;
+        return v;
+      });
+    // });
   };
 
   getList();

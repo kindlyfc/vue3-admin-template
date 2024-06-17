@@ -28,6 +28,7 @@
     >
 
     <a-checkbox
+      v-if="!justOneColor"
       v-model:checked="props.formData.isGradation"
       @change="isGradationChange"
       class="mt6px"
@@ -72,6 +73,10 @@
   import { Sketch } from '@ans1998/vue3-color';
 
   const props = defineProps({
+    justOneColor: {
+      type: Boolean,
+      default: false,
+    }, //只能选一个颜色
     formData: {
       type: Object,
       default: () => {

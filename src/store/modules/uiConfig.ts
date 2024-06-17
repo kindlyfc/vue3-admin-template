@@ -3,12 +3,15 @@
 import { defineStore } from 'pinia'
 import { theme } from 'ant-design-vue'
 import { store } from '@/store'
+import { getModule, nameList, imgList } from '@/api/uiConfig';
 
 interface UiState {
   themeConfig: any
   customConfig: any
   systemNameConfig: any
   systemLogoConfig: any
+  systemModule1: any
+  systemModule2: any
 }
 
 export const useUiStore = defineStore({
@@ -56,7 +59,11 @@ export const useUiStore = defineStore({
       webLogin: null,
       webTop: null,
       webSysTem: null
-    }
+    },
+    //系统module配置一级菜单
+    systemModule1: null,
+    //系统module配置二级菜单
+    systemModule2: null,
   }),
   getters: {
     getTheme(): Object {
@@ -76,9 +83,32 @@ export const useUiStore = defineStore({
     themeEdit(data) {
       this.themeConfig.token = data
     },
-    //获取系统名称/LOGO
-    getNameORLogo() {
-      // return getSysteminfo()
+    //获取系统模块
+    async getModule() {
+      const res: any = await getModule()
+      res.forEach(v => {
+        v.moduleName == '一级模块' ? this.systemModule1 = v : this.systemModule2 = v
+      });
+      return res
+    },
+    //获取系统名称
+    async getSysName() {
+      const res: any = await nameList()
+      res.forEach(v => {
+        this.systemNameConfig.webLogin = res.find(v => v.namePositionCode == 'web_login_page')
+        this.systemNameConfig.webTop = res.find(v => v.namePositionCode == 'web_top')
+      });
+      return res
+    },
+    //获取系统LOGO
+    async getSysLogo() {
+      const res: any = await imgList()
+      res.forEach(v => {
+        this.systemLogoConfig.webLogin = res.find(v => v.namePositionCode == 'web_login_sys_name_logo')
+        this.systemLogoConfig.webTop = res.find(v => v.namePositionCode == 'web_platform_sys_name_logo')
+        this.systemLogoConfig.webSysTem = res.find(v => v.namePositionCode == 'web_login_backend')
+      });
+      return res
     }
   }
 })

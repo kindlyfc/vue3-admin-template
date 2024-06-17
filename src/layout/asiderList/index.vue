@@ -3,15 +3,57 @@
     <div
       v-for="(item, index) in menus"
       :key="item.path"
-      :class="{ Ch_bc: checkRouter(index) }"
+      :style="
+        (!checkRouter(index)
+          ? ''
+          : modulesData?.moduleChooseGradient == 1
+          ? `background-image: linear-gradient( ${
+              modulesData?.moduleChooseGradientType == 1 ? 'to bottom' : 'to right'
+            },${modulesData?.moduleChooseStartColor || '#ffffff69'},${
+              modulesData?.moduleChooseEndColor || '#ffffff69'
+            });`
+          : `background:${modulesData?.moduleChooseStartColor || '#ffffff69'};`) +
+        `margin-bottom:${
+          modulesData?.moduleInterval ? modulesData?.moduleInterval + 'px' : 'margin-bottom: 2.5vh;'
+        }`
+      "
       @click="clickMenuItem(item.name, item?.children)"
     >
-      <a-tooltip placement="right" color="#659fd1">
+      <!-- <a-tooltip placement="right" color="#659fd1">
         <template #title>
           <span>{{ item?.meta?.title }}</span>
-        </template>
-        <svg-icon :name="item?.meta?.icon" size="28"> </svg-icon>
-      </a-tooltip>
+        </template> -->
+      <svg-icon
+        :name="item?.meta?.icon || ''"
+        size="28"
+        :color="
+          modulesData?.moduleGradient == 1
+            ? ` background-image:linear-gradient(${
+                modulesData?.moduleGradientType == 1 ? 'to bottom' : 'to right'
+              },${modulesData?.moduleStartColor || '#fff'},${
+                modulesData?.moduleEndColor || '#fff'
+              }); 
+              -webkit-background-clip:text; 
+              -webkit-text-fill-color:transparent;`
+            : `${modulesData?.moduleStartColor || '#fff'}`
+        "
+      >
+      </svg-icon>
+      <div
+        class="text_sty"
+        :style="
+          (modulesData?.fontGradient == 1
+            ? ` background-image:linear-gradient(${
+                modulesData?.fontGradientType == 1 ? 'to bottom' : 'to right'
+              },${modulesData?.fontStartColor || '#fff'},${modulesData?.fontEndColor || '#fff'}); 
+              -webkit-background-clip:text; 
+              -webkit-text-fill-color:transparent;`
+            : `color:${modulesData?.fontStartColor || '#fff'};`) +
+          `font-size:${modulesData?.fontSize ? modulesData?.fontSize + 'px' : ''}`
+        "
+        >{{ item?.meta?.title }}</div
+      >
+      <!-- </a-tooltip> -->
     </div>
   </div>
 </template>
@@ -21,7 +63,11 @@
   import { useRoute, useRouter } from 'vue-router';
   import { useUserStore } from '@/store/modules/user';
   import { LOGIN_NAME } from '@/router/constant';
-
+  import { useUiStore } from '@/store/modules/uiConfig';
+  const uiStore = useUiStore();
+  const modulesData = computed(() => {
+    return uiStore.systemModule1;
+  });
   const chooseName = ref<any>('');
   const userStore = useUserStore();
   // 当前路由
@@ -80,12 +126,17 @@
 
     > div {
       text-align: center;
-      width: 40px;
-      height: 40px;
+      width: 95px;
       border-radius: 6px;
       margin: 0 auto;
-      margin-bottom: 3.1vh;
-      line-height: 53px;
+      padding: 5px 0 5px 0;
+
+      .text_sty {
+        margin-top: 3px;
+        text-align: center !important;
+        width: 100%;
+        font-weight: 550;
+      }
     }
 
     &::-webkit-scrollbar {

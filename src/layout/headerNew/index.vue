@@ -1,20 +1,66 @@
 <template>
   <Layout.Header class="layout-header">
     <div class="secondPath">
-      <img src="@/assets/images/logo.png" alt="网页标题" />
+      <img
+        :src="logoImageUrl"
+        :alt="webTop?.titleName"
+        :style="{
+          height: logoImage?.height ? logoImage?.height + 'px' : '21px',
+          width: logoImage?.width ? logoImage?.width + 'px' : '194px',
+        }"
+      />
       <div class="second_content" :style="{ background: topBackground }">
         <div
           v-for="item in SecondPath"
           :key="item.path"
-          :style="{ display: item?.meta?.hideInTabs ? 'none' : '' }"
+          :style="{
+            marginRight: menuData?.moduleInterval ? menuData?.moduleInterval + 'px' : '10px',
+            display: item?.meta?.hideInTabs ? 'none' : '',
+            fontSize: menuData?.fontSize ? menuData?.fontSize + 'px' : '',
+            backgroundImage:
+              route.name === item?.name
+                ? `linear-gradient( ${
+                    menuData?.moduleChooseGradientType == 1 ? 'to bottom' : 'to right'
+                  },${menuData?.moduleChooseStartColor || '#74b0e4'},${
+                    menuData?.moduleChooseEndColor || '#3768ce'
+                  })`
+                : `linear-gradient( ${
+                    menuData?.moduleGradientType == 1 ? 'to bottom' : 'to right'
+                  },${menuData?.moduleStartColor || '#fff'},${menuData?.moduleEndColor || '#fff'})`,
+          }"
           :class="{ active: route.name === item?.name }"
           @click="clickMenuItem(item?.name)"
-          >{{ item?.meta?.title }}</div
+          ><span
+            :style="{
+              backgroundImage:
+                route.name === item?.name
+                  ? ''
+                  : `linear-gradient(${
+                      menuData?.fontGradientType == 1 ? 'to bottom' : 'to right'
+                    },${menuData?.fontStartColor || '#333'},${menuData?.fontEndColor || '#333'})`,
+              WebkitBackgroundClip: route.name === item?.name ? '' : 'text',
+              WebkitTextFillColor: route.name === item?.name ? '' : 'transparent',
+            }"
+            >{{ item?.meta?.title }}</span
+          ></div
         >
       </div>
     </div>
     <div class="Bread_crumbs">
-      网页标题{{ firstPathName || '' }} <span>{{ secondPathName || '' }}</span></div
+      <span
+        :style="
+          webTop?.gradient == 1
+            ? `background-image:linear-gradient(${
+                webTop?.gradientType == 1 ? 'to bottom' : 'to right'
+              },${webTop?.startGradientColor || '#fff'},${webTop?.endGradientColor || '#fff'}); 
+              -webkit-background-clip:text; 
+              -webkit-text-fill-color:transparent;`
+            : `color:${webTop?.startGradientColor || '#fff'};`
+        "
+      >
+        {{ webTop?.titleName ? webTop?.titleName + '-' : '' }}{{ firstPathName || '' }}
+        <span>{{ secondPathName || '' }}</span>
+      </span></div
     >
   </Layout.Header>
 </template>
@@ -27,6 +73,19 @@
   import { useUiStore } from '@/store/modules/uiConfig';
   import { useKeepAliveStore } from '@/store/modules/keepAlive';
   import { LOGIN_NAME } from '@/router/constant';
+  const uiStore = useUiStore();
+  const menuData = computed(() => {
+    return uiStore.systemModule2;
+  });
+  const webTop = computed(() => {
+    return uiStore.systemNameConfig?.webTop;
+  });
+  const logoImageUrl = computed(() => {
+    return import.meta.env.VITE_BASE_IMAGE_PATH + uiStore.systemLogoConfig?.webTop?.imageUrl;
+  });
+  const logoImage = computed(() => {
+    return uiStore.systemLogoConfig?.webTop;
+  });
 
   defineProps({
     collapsed: {
@@ -37,7 +96,6 @@
     },
   });
 
-  const uiStore = useUiStore();
   const getBGcolor = (name) => {
     return computed(() => {
       const colorInfo = uiStore.customConfig.colorManageWeb.find((item) => item.name === name);
@@ -130,8 +188,8 @@
       align-items: center;
 
       > img {
-        width: 194px;
-        height: 21px;
+        // width: 194px;
+        // height: 21px;
         margin-right: 32px;
       }
 
@@ -154,11 +212,10 @@
           font-weight: bold;
           color: #333333;
           line-height: 40px;
-          margin-right: 10px;
         }
 
         .active {
-          background: linear-gradient(0deg, #74b0e4 0%, #3768ce 100%) !important;
+          // background: linear-gradient(0deg, #74b0e4 0%, #3768ce 100%) !important;
           color: #fff !important;
         }
       }
@@ -170,11 +227,11 @@
       font-size: 12px;
       font-family: PingFang SC-Medium, PingFang SC;
       font-weight: 500;
-      color: #333333;
+      // color: #333333;
 
-      span {
-        color: #5389d8;
-      }
+      // span {
+      //   color: #5389d8;
+      // }
     }
   }
 </style>

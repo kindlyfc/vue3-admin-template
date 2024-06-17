@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-  import { watch } from 'vue';
+  import { watch, watchEffect, computed } from 'vue';
   import { useRoute } from 'vue-router';
   import { ConfigProvider } from 'ant-design-vue';
   import { transformI18n } from './hooks/useI18n';
@@ -20,8 +20,12 @@
 
   const uiStore = useUiStore();
   const theme = uiStore.themeConfig;
-  uiStore.getNameORLogo(); //打开系统直接获取名称/LOGO
-
+  uiStore.getModule();
+  uiStore.getSysLogo();
+  uiStore.getSysName();
+  const webTop = computed(() => {
+    return uiStore.systemNameConfig?.webTop;
+  });
   watch(theme, (newVal) => {
     console.log(newVal, 5555555);
   });
@@ -31,12 +35,14 @@
   const route = useRoute();
   const { getAntdLocale } = useLocale();
 
-  // watchEffect(() => {
-  //   if (route.meta?.title) {
-  //     // 翻译网页标题
-  //     document.title = transformI18n(route.meta.title);
-  //   }
-  // });
+  watchEffect(() => {
+    if (route.meta?.title) {
+      // 翻译网页标题
+      document.title = transformI18n((webTop.value?.titleName || '') + '-' + route.meta.title);
+    } else {
+      document.title = transformI18n(webTop.value?.titleName);
+    }
+  });
 
   /**
    * 表格数据过滤

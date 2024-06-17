@@ -1,8 +1,18 @@
 <template>
-  <div class="login-box" :style="`background: url(${bgImg}) no-repeat; background-size: 100%;`">
+  <div
+    class="login-box"
+    :style="`background: url(${bgImageUrl}) no-repeat; background-size: 100%;`"
+  >
     <div class="login-center">
       <div class="login-logo">
-        <img src="@/assets/images/logo.png" alt="网页标题" />
+        <img
+          :src="logoImageUrl"
+          alt="网页标题"
+          :style="{
+            height: webLogin?.height ? webLogin?.height + 'px' : '55px',
+            width: webLogin?.width ? webLogin?.width + 'px' : '477px',
+          }"
+        />
       </div>
       <a-form
         layout="horizontal"
@@ -88,7 +98,7 @@
 </template>
 
 <script setup lang="ts">
-  import { reactive, ref } from 'vue';
+  import { reactive, ref, computed } from 'vue';
   import { UserOutlined, LockOutlined, SafetyOutlined } from '@ant-design/icons-vue';
   import { useRoute, useRouter } from 'vue-router';
   import { Base64 } from 'js-base64';
@@ -109,8 +119,15 @@
   });
 
   const uiStore = useUiStore();
-  const systemName = uiStore.systemNameConfig;
-  const systemLogo = uiStore.systemLogoConfig;
+  const bgImageUrl = computed(() => {
+    return import.meta.env.VITE_BASE_IMAGE_PATH + uiStore.systemLogoConfig?.webSysTem?.imageUrl;
+  });
+  const logoImageUrl = computed(() => {
+    return import.meta.env.VITE_BASE_IMAGE_PATH + uiStore.systemLogoConfig?.webLogin?.imageUrl;
+  });
+  const webLogin = computed(() => {
+    return uiStore.systemLogoConfig?.webLogin;
+  });
   const temporarytoken = ref<string>('');
   const route = useRoute();
   const router = useRouter();
@@ -175,17 +192,19 @@
 
     .login-center {
       width: 598px;
-      height: 427px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
     .login-logo {
-      margin-bottom: 47px;
+      margin-bottom: 45px;
       border-bottom: 1px solid #ccccd1;
-      width: 587px;
-      padding: 45px 55px;
+      width: 100%;
+      height: 136px !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       img {
         width: 477px;
