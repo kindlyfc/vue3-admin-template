@@ -1,5 +1,5 @@
-import type { RouteRecordRaw } from 'vue-router';
-import RouterView from '@/layout/tabs/tabs-view.vue';
+import type { RouteRecordRaw } from 'vue-router'
+import RouterView from '@/layout/tabs/tabs-view.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -46,15 +46,6 @@ const routes: Array<RouteRecordRaw> = [
     },
     children: [
       {
-        path: 'mobile',
-        name: `mobile`,
-        meta: {
-          title: '移动端',
-          authority: '/sys/user',
-        },
-        component: () => import('@/views/colorManage/mobile/index.vue'),
-      },
-      {
         path: 'web',
         name: `web`,
         meta: {
@@ -62,6 +53,15 @@ const routes: Array<RouteRecordRaw> = [
           authority: '/sys/user',
         },
         component: () => import('@/views/colorManage/web/index.vue'),
+      },
+      {
+        path: 'mobile',
+        name: `mobile`,
+        meta: {
+          title: '移动端',
+          authority: '/sys/user',
+        },
+        component: () => import('@/views/colorManage/mobile/index.vue'),
       }
     ],
   },
@@ -118,6 +118,6 @@ const routes: Array<RouteRecordRaw> = [
       }
     ],
   },
-];
+]
 
-export default routes;
+export default routes

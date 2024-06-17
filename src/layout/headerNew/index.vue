@@ -9,6 +9,7 @@
           width: logoImage?.width ? logoImage?.width + 'px' : '194px',
         }"
       />
+      <!-- <div class="top-title">后台管理系统</div> -->
       <div class="second_content" :style="{ background: topBackground }">
         <div
           v-for="item in SecondPath"
@@ -186,6 +187,16 @@
     .secondPath {
       display: flex;
       align-items: center;
+
+      .top-title {
+        font-size: 22px;
+        margin-right: 30px;
+        font-weight: bold;
+        background-image: linear-gradient(to bottom, #74b0e4 0%, #3768ce 100%) !important;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+      }
 
       > img {
         // width: 194px;

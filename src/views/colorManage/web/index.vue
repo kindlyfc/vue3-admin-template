@@ -84,15 +84,11 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, reactive, onMounted } from 'vue';
+  import { ref, reactive } from 'vue';
   import { useUiStore } from '@/store/modules/uiConfig';
   import type { TableColumnsType } from 'ant-design-vue';
   import ColorSelect from '@/components/basic/color-select/color-select.vue';
   import officialThemeConfig from './components/officialThemeConfig.vue';
-
-  onMounted(() => {
-    document.documentElement.style.setProperty('--table-header-bg-color', 'red');
-  });
 
   const uiStore = useUiStore();
 

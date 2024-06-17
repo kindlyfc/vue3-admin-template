@@ -4,7 +4,7 @@
 
     <a-drawer
       v-model:open="open"
-      width="calc(100vw - 100px)"
+      width="calc(100vw - 200px)"
       title="主题编辑与预览"
       placement="right"
     >
@@ -15,7 +15,13 @@
 
           <div class="relative pr-30px">
             <div class="config-item">
-              <span>主题色：</span>
+              <span>
+                <a-tooltip
+                  title="内容主色调，包括基本按钮颜色，按钮悬停颜色，表单组件激活时边框颜色等"
+                >
+                  主题色：<QuestionCircleOutlined />
+                </a-tooltip>
+              </span>
               <div class="color">
                 <span class="">{{ form.colorPrimary }}</span>
                 <div
@@ -168,14 +174,47 @@
             <a-table
               :columns="columns"
               :data-source="data"
-              :scroll="{ x: 1500, y: 'calc(100vh - 325px)' }"
+              :scroll="{ x: 1000, y: 'calc(100vh - 730px)' }"
+              class="mb-10px"
             >
               <template #bodyCell="{ column }">
                 <template v-if="column.key === 'operation'">
-                  <a>编辑</a>
+                  <div>
+                    <a-button type="link">查看</a-button>
+                    <a-button type="link">编辑</a-button>
+                    <a-button type="link" danger>删除</a-button>
+                  </div>
                 </template>
               </template>
             </a-table>
+            <div>
+              <a-radio :checked="true">单选框</a-radio>
+              <a-checkbox :checked="false">多选框</a-checkbox>
+              <a-checkbox :checked="true">多选框选中</a-checkbox>
+              <a-switch :checked="true" class="mr-40px"></a-switch>
+              <a-radio-group value="a" button-style="solid" class="mr-30px">
+                <a-radio-button value="a">标签页1</a-radio-button>
+                <a-radio-button value="b">标签页2</a-radio-button>
+                <a-radio-button value="c">标签页3</a-radio-button>
+              </a-radio-group>
+              <a-tag color="success">成功状态</a-tag>
+              <a-tag color="warning">警戒状态</a-tag>
+              <a-tag color="error">错误状态</a-tag>
+              <a-spin class="ml-40px" />
+            </div>
+            <div class="flex mt-10px">
+              <a-calendar class="w-585px" :fullscreen="false" />
+              <a-timeline class="relative left-20px top-20px">
+                <a-timeline-item>Create a services site 2015-09-01</a-timeline-item>
+                <a-timeline-item>Solve initial network problems 2015-09-01</a-timeline-item>
+                <a-timeline-item>Technical testing 2015-09-01</a-timeline-item>
+                <a-timeline-item>Network problems being solved 2015-09-01</a-timeline-item>
+                <a-timeline-item>Create a services site 2015-09-01</a-timeline-item>
+                <a-timeline-item>Solve initial network problems 2015-09-01</a-timeline-item>
+                <a-timeline-item>Technical testing 2015-09-01</a-timeline-item>
+                <a-timeline-item>Network problems being solved 2015-09-01</a-timeline-item>
+              </a-timeline>
+            </div>
           </div>
         </div>
       </div>
@@ -189,10 +228,11 @@
   import { Sketch } from '@ans1998/vue3-color';
   import { useUiStore } from '@/store/modules/uiConfig';
   import { message } from 'ant-design-vue';
+  import { QuestionCircleOutlined } from '@ant-design/icons-vue';
 
   const uiStore = useUiStore();
 
-  const open = ref(true);
+  const open = ref(false);
 
   // S 主题编辑
   const form = reactive<any>(uiStore.themeConfig.token);
@@ -228,16 +268,15 @@
 
   // S 效果预览
   const columns: TableColumnsType = [
-    { title: 'Full Name', width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
-    { title: 'Age', width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
-    { title: 'Column 1', dataIndex: 'address', key: '1', width: 180 },
-    { title: 'Column 2', dataIndex: 'address', key: '2', width: 180 },
-    { title: 'Column 3', dataIndex: 'address', key: '3', width: 180 },
+    { title: '姓名', dataIndex: 'name', key: 'name' },
+    { title: '年龄', dataIndex: 'age', key: 'age' },
+    { title: '单元格1', dataIndex: 'address', key: '1' },
+    { title: '单元格2', dataIndex: 'address', key: '2' },
+    { title: '单元格3', dataIndex: 'address', key: '3' },
     {
-      title: 'Action',
+      title: '操作',
       key: 'operation',
-      fixed: 'right',
-      width: 100,
+      width: 260,
     },
   ];
 
