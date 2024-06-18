@@ -40,10 +40,16 @@
     <div class="ca_region">
       <div class="titleSty">系统LOGO</div>
       <div flex>
-        <div relative m20px mr60px v-for="item in dataSourceLogo" :key="item.namePositionCode">
+        <div
+          relative
+          m20px
+          mr60px
+          class="image_cont"
+          v-for="item in dataSourceLogo"
+          :key="item.namePositionCode"
+        >
           <img
             w240px
-            h164px
             :src="item.imageUrl ? item.url : chooseUrl"
             alt=""
             @click="showUpdateImg(item)"
@@ -64,10 +70,16 @@
     <div class="ca_region">
       <div class="titleSty">登录背景图</div>
       <div flex>
-        <div relative m20px mr60px v-for="item in dataSourceBgImg" :key="item.namePositionCode">
+        <div
+          relative
+          m20px
+          mr60px
+          class="image_cont"
+          v-for="item in dataSourceBgImg"
+          :key="item.namePositionCode"
+        >
           <img
             w240px
-            h164px
             :src="item.imageUrl ? item.url : chooseUrl"
             alt=""
             @click="showUpdateImg(item)"
@@ -470,5 +482,12 @@
     width: 20px;
     height: 20px;
     z-index: 10;
+  }
+
+  .image_cont {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 </style>
