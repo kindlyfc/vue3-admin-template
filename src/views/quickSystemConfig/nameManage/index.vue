@@ -4,10 +4,11 @@
       <div class="titleSty">系统名称</div>
       <a-table
         :columns="columns"
-        :row-key="(record) => record.id"
+        :row-key="(record) => record.namePositionCode"
         :data-source="dataSource"
         :scroll="{ y: '62vh' }"
         :loading="tableLoading1"
+        :pagination="false"
         :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : undefined)"
       >
         <template #bodyCell="{ column, record }">
@@ -216,6 +217,8 @@
   import { nameList, editName, imgList, editLogo } from '@/api/uiConfig';
   import { useUiStore } from '@/store/modules/uiConfig';
   import { message } from 'ant-design-vue';
+  import type { TableColumnsType } from 'ant-design-vue';
+
   const IMAGPATH = ref(import.meta.env.VITE_BASE_IMAGE_PATH);
   const uiStore = useUiStore();
   const formData = reactive<any>({
@@ -263,7 +266,7 @@
   const dataSource = ref<any>([]);
   const dataSourceBgImg = ref<any>([]);
   const dataSourceLogo = ref<any>([]);
-  const columns = ref<any>([
+  const columns: TableColumnsType = [
     {
       title: '名称位置',
       dataIndex: 'namePosition',
@@ -301,7 +304,7 @@
       align: 'center',
       width: 140,
     },
-  ]);
+  ];
 
   const getColorData = (data) => {
     Object.assign(formDataColor, data);

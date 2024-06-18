@@ -42,7 +42,5 @@ async function setupApp() {
   await setupRouter(app)
   app.mount('#app')
 }
-
 setupPlugins()
-
 setupApp()
