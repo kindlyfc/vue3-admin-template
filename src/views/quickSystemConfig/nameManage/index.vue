@@ -312,6 +312,7 @@
   };
   const getList = async () => {
     // nameList().then((res) => {
+    dataSource.value = [];
     const res = await uiStore.getSysName();
     dataSource.value = res;
     // });
