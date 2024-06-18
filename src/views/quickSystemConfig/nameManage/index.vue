@@ -3,6 +3,7 @@
     <div class="ca_region">
       <div class="titleSty">系统名称</div>
       <a-table
+        v-if="dataSource.length"
         :columns="columns"
         :row-key="(record) => record.namePositionCode"
         :data-source="dataSource"
