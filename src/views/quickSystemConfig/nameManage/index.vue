@@ -53,7 +53,9 @@
             alt=""
             @click="item.imageUrl = null"
           /> -->
-          <div text-center mt4px>{{ item.width || '--' }} X {{ item.height || '--' }}</div>
+          <div class="my-10px!" text-center mt4px
+            >{{ item.width || '--' }} x {{ item.height || '--' }}（px）</div
+          >
           <div text-center mt4px>{{ item.namePosition || '--' }}</div>
         </div>
       </div>
@@ -77,10 +79,16 @@
             @click="item.imageUrl = null"
             alt=""
           /> -->
-          <div v-if="item.namePositionCode != 'web_login_backend'" text-center mt4px
+          <!-- <div
+            v-if="
+              item.namePositionCode != 'web_login_backend' &&
+              item.namePositionCode != 'mobile_login_backend'
+            "
+            text-center
+            mt4px
             >{{ item.width || '--' }} X {{ item.height || '--' }}</div
-          >
-          <div text-center mt4px>{{ item.namePosition || '--' }}</div>
+          > -->
+          <div class="mt-20px!" text-center mt4px>{{ item.namePosition || '--' }}</div>
         </div>
       </div>
     </div>
@@ -126,6 +134,8 @@
               style="width: 300px"
               v-model:value="formData.fontSize"
               placeholder="请输入字体大小"
+              :min="12"
+              :max="32"
             ></a-input-number
             ><div w40px ml10px mt3px>px</div></div
           >
@@ -136,6 +146,8 @@
               style="width: 300px"
               v-model:value="formData.fontInterval"
               placeholder="请输入字体间距"
+              :min="1"
+              :max="100"
             ></a-input-number
             ><div w40px ml10px mt4px>px</div></div
           >
@@ -147,7 +159,7 @@
     <a-modal
       v-model:visible="EidtVisible1"
       :width="580"
-      title="LOGO图片编辑"
+      title="图片编辑"
       centered
       @cancel="clearForm()"
       @ok="imgSbumit"
@@ -163,8 +175,13 @@
           <a-input style="width: 300px" v-model:value="logoData.namePosition" disabled></a-input>
         </a-form-item>
         <a-form-item
-          v-if="logoData.namePositionCode != 'web_login_backend'"
+          v-if="
+            logoData.namePositionCode != 'web_login_backend' &&
+            logoData.namePositionCode != 'mobile_login_backend'
+          "
           label="logo高度"
+          :min="10"
+          :max="100"
           name="height"
           :rules="{ required: true, message: '输入logo高度' }"
         >
@@ -178,8 +195,13 @@
           >
         </a-form-item>
         <a-form-item
-          v-if="logoData.namePositionCode != 'web_login_backend'"
+          v-if="
+            logoData.namePositionCode != 'web_login_backend' &&
+            logoData.namePositionCode != 'mobile_login_backend'
+          "
           label="logo宽度"
+          :min="10"
+          :max="500"
           name="width"
           :rules="{ required: true, message: '输入logo宽度' }"
         >
@@ -232,8 +254,8 @@
   });
   const initFormColor = () => {
     return {
-      isGradation: false,
-      lrRotb: '',
+      gradation: false,
+      irRotb: '',
       /* 颜色选择器 */
       colors: initColor(),
       colorsShow: false,
@@ -349,25 +371,25 @@
     formDataColor.colors.hex8 = gradient == 1 ? '' : startGradientColor;
     formDataColor.colors0.hex8 = gradient == 1 ? startGradientColor : '';
     formDataColor.colors100.hex8 = gradient == 1 ? endGradientColor : '';
-    formDataColor.isGradation = gradient == 1 ? true : false;
-    formDataColor.lrRotb = gradientType == 1 ? 'to bottom' : gradientType == 2 ? 'to right' : '';
+    formDataColor.gradation = gradient == 1 ? true : false;
+    formDataColor.irRotb = gradientType == 1 ? 'to bottom' : gradientType == 2 ? 'to right' : '';
     EidtVisible.value = true;
   };
 
   const sbumit = () => {
     formRef.value.validate().then((res) => {
       const { namePosition, titleName, fontInterval, fontSize, namePositionCode } = formData;
-      const { colors, colors0, colors100, isGradation, lrRotb } = formDataColor;
+      const { colors, colors0, colors100, gradation, irRotb } = formDataColor;
       const data = {
         namePosition,
         titleName,
         fontInterval,
         fontSize,
-        startGradientColor: isGradation ? colors0.hex8 : colors.hex8,
+        startGradientColor: gradation ? colors0.hex8 : colors.hex8,
         namePositionCode,
-        endGradientColor: isGradation ? colors100.hex8 : colors.hex8,
-        gradient: isGradation ? 1 : 0,
-        gradientType: lrRotb == 'to bottom' ? 1 : lrRotb == 'to right' ? 2 : '',
+        endGradientColor: gradation ? colors100.hex8 : colors.hex8,
+        gradient: gradation ? 1 : 0,
+        gradientType: irRotb == 'to bottom' ? 1 : irRotb == 'to right' ? 2 : '',
       };
       editName(data).then((res) => {
         message.success('操作成功');

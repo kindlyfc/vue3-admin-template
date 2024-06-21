@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-  import { watch, watchEffect, computed } from 'vue';
+  import { watchEffect, computed, nextTick } from 'vue';
   import { useRoute } from 'vue-router';
   import { ConfigProvider } from 'ant-design-vue';
   import { transformI18n } from './hooks/useI18n';
@@ -23,11 +23,11 @@
   uiStore.getModule();
   uiStore.getSysLogo();
   uiStore.getSysName();
+  uiStore.getItemList();
+  uiStore.getColorConfigList();
+
   const webTop = computed(() => {
     return uiStore.systemNameConfig?.webTop;
-  });
-  watch(theme, (newVal) => {
-    console.log(newVal, 5555555);
   });
 
   const innerWidth = 1920;

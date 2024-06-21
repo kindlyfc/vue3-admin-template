@@ -2,38 +2,38 @@ import type { RouteRecordRaw } from 'vue-router'
 import RouterView from '@/layout/tabs/tabs-view.vue'
 
 const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/test',
-    name: '/test',
-    redirect: '/test/test',
-    component: RouterView,
-    meta: {
-      title: '测试页面',
-      icon: 'shijianpeizhi',
-      authority: '/sys',
-    },
-    children: [
+  // {
+  //   path: '/test',
+  //   name: '/test',
+  //   redirect: '/test/test',
+  //   component: RouterView,
+  //   meta: {
+  //     title: '测试页面',
+  //     icon: 'shijianpeizhi',
+  //     authority: '/sys',
+  //   },
+  //   children: [
 
-      {
-        path: 'test',
-        name: `test`,
-        meta: {
-          title: '测试页面',
-          authority: '/sys/user',
-        },
-        component: () => import('@/views/test/test/test.vue'),
-      },
-      {
-        path: 'test2',
-        name: `test2`,
-        meta: {
-          title: '测试页面2',
-          authority: '/sys/user',
-        },
-        component: () => import('@/views/test/test2/test2.vue'),
-      },
-    ],
-  },
+  //     {
+  //       path: 'test',
+  //       name: `test`,
+  //       meta: {
+  //         title: '测试页面',
+  //         authority: '/sys/user',
+  //       },
+  //       component: () => import('@/views/test/test/test.vue'),
+  //     },
+  //     {
+  //       path: 'test2',
+  //       name: `test2`,
+  //       meta: {
+  //         title: '测试页面2',
+  //         authority: '/sys/user',
+  //       },
+  //       component: () => import('@/views/test/test2/test2.vue'),
+  //     },
+  //   ],
+  // },
   {
     path: '/colorManage',
     name: '/colorManage',

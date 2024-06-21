@@ -10,6 +10,8 @@
                 style="width: 300px"
                 v-model:value="formData1.fontSize"
                 placeholder="请输字体大小"
+                :min="12"
+                :max="32"
               ></a-input-number
               ><div w40px ml10px mt3px>px </div></div
             >
@@ -20,6 +22,8 @@
                 style="width: 300px"
                 v-model:value="formData1.moduleInterval"
                 placeholder="请输入菜单间距"
+                :min="1"
+                :max="100"
               ></a-input-number
               ><div w40px ml10px mt4px>px</div></div
             >
@@ -69,6 +73,8 @@
                 style="width: 300px"
                 v-model:value="formData2.fontSize"
                 placeholder="请输字体大小"
+                :min="12"
+                :max="32"
               ></a-input-number
               ><div w40px ml10px mt3px>px </div></div
             >
@@ -79,6 +85,8 @@
                 style="width: 300px"
                 v-model:value="formData2.moduleInterval"
                 placeholder="请输入菜单间距"
+                :min="1"
+                :max="100"
               ></a-input-number
               ><div w40px ml10px mt4px>px</div></div
             >
@@ -146,8 +154,8 @@
   });
   const initFormColor = () => {
     return {
-      isGradation: false,
-      lrRotb: '',
+      gradation: false,
+      irRotb: '',
       /* 颜色选择器 */
       colors: initColor(),
       colorsShow: false,
@@ -198,22 +206,22 @@
         Color1Text.colors.hex8 = fontGradient == 1 ? '' : fontStartColor;
         Color1Text.colors0.hex8 = fontGradient == 1 ? fontStartColor : '';
         Color1Text.colors100.hex8 = fontGradient == 1 ? fontEndColor : '';
-        Color1Text.isGradation = fontGradient == 1 ? true : false;
-        Color1Text.lrRotb =
+        Color1Text.gradation = fontGradient == 1 ? true : false;
+        Color1Text.irRotb =
           fontGradientType == 1 ? 'to bottom' : fontGradientType == 2 ? 'to right' : '';
 
         Color1Mdoule.colors.hex8 = moduleGradient == 1 ? '' : moduleStartColor;
         Color1Mdoule.colors0.hex8 = moduleGradient == 1 ? moduleStartColor : '';
         Color1Mdoule.colors100.hex8 = moduleGradient == 1 ? moduleEndColor : '';
-        Color1Mdoule.isGradation = moduleGradient == 1 ? true : false;
-        Color1Mdoule.lrRotb =
+        Color1Mdoule.gradation = moduleGradient == 1 ? true : false;
+        Color1Mdoule.irRotb =
           moduleGradientType == 1 ? 'to bottom' : moduleGradientType == 2 ? 'to right' : '';
 
         Color1Bgc.colors.hex8 = moduleChooseGradient == 1 ? '' : moduleChooseStartColor;
         Color1Bgc.colors0.hex8 = moduleChooseGradient == 1 ? moduleChooseStartColor : '';
         Color1Bgc.colors100.hex8 = moduleChooseGradient == 1 ? moduleChooseEndColor : '';
-        Color1Bgc.isGradation = moduleChooseGradient == 1 ? true : false;
-        Color1Bgc.lrRotb =
+        Color1Bgc.gradation = moduleChooseGradient == 1 ? true : false;
+        Color1Bgc.irRotb =
           moduleChooseGradientType == 1
             ? 'to bottom'
             : moduleChooseGradientType == 2
@@ -229,22 +237,22 @@
         Color2Text.colors.hex8 = fontGradient == 1 ? '' : fontStartColor;
         Color2Text.colors0.hex8 = fontGradient == 1 ? fontStartColor : '';
         Color2Text.colors100.hex8 = fontGradient == 1 ? fontEndColor : '';
-        Color2Text.isGradation = fontGradient == 1 ? true : false;
-        Color2Text.lrRotb =
+        Color2Text.gradation = fontGradient == 1 ? true : false;
+        Color2Text.irRotb =
           fontGradientType == 1 ? 'to bottom' : fontGradientType == 2 ? 'to right' : '';
 
         Color2Mdoule.colors.hex8 = moduleGradient == 1 ? '' : moduleStartColor;
         Color2Mdoule.colors0.hex8 = moduleGradient == 1 ? moduleStartColor : '';
         Color2Mdoule.colors100.hex8 = moduleGradient == 1 ? moduleEndColor : '';
-        Color2Mdoule.isGradation = moduleGradient == 1 ? true : false;
-        Color2Mdoule.lrRotb =
+        Color2Mdoule.gradation = moduleGradient == 1 ? true : false;
+        Color2Mdoule.irRotb =
           moduleGradientType == 1 ? 'to bottom' : moduleGradientType == 2 ? 'to right' : '';
 
         Color2Bgc.colors.hex8 = moduleChooseGradient == 1 ? '' : moduleChooseStartColor;
         Color2Bgc.colors0.hex8 = moduleChooseGradient == 1 ? moduleChooseStartColor : '';
         Color2Bgc.colors100.hex8 = moduleChooseGradient == 1 ? moduleChooseEndColor : '';
-        Color2Bgc.isGradation = moduleChooseGradient == 1 ? true : false;
-        Color2Bgc.lrRotb =
+        Color2Bgc.gradation = moduleChooseGradient == 1 ? true : false;
+        Color2Bgc.irRotb =
           moduleChooseGradientType == 1
             ? 'to bottom'
             : moduleChooseGradientType == 2
@@ -262,19 +270,19 @@
       fontSize,
       moduleName,
       moduleInterval,
-      fontStartColor: color1.isGradation ? color1.colors0.hex8 : color1.colors.hex8,
-      fontEndColor: color1.isGradation ? color1.colors100.hex8 : color1.colors.hex8,
-      fontGradient: color1.isGradation ? 1 : 0,
-      fontGradientType: color1.lrRotb == 'to bottom' ? 1 : color1.lrRotb == 'to right' ? 2 : '',
-      moduleStartColor: color2.isGradation ? color2.colors0.hex8 : color2.colors.hex8,
-      moduleEndColor: color2.isGradation ? color2.colors100.hex8 : color2.colors.hex8,
-      moduleGradient: color2.isGradation ? 1 : 0,
-      moduleGradientType: color2.lrRotb == 'to bottom' ? 1 : color2.lrRotb == 'to right' ? 2 : '',
-      moduleChooseStartColor: color3.isGradation ? color3.colors0.hex8 : color3.colors.hex8,
-      moduleChooseEndColor: color3.isGradation ? color3.colors100.hex8 : color3.colors.hex8,
-      moduleChooseGradient: color3.isGradation ? 1 : 0,
+      fontStartColor: color1.gradation ? color1.colors0.hex8 : color1.colors.hex8,
+      fontEndColor: color1.gradation ? color1.colors100.hex8 : color1.colors.hex8,
+      fontGradient: color1.gradation ? 1 : 0,
+      fontGradientType: color1.irRotb == 'to bottom' ? 1 : color1.irRotb == 'to right' ? 2 : '',
+      moduleStartColor: color2.gradation ? color2.colors0.hex8 : color2.colors.hex8,
+      moduleEndColor: color2.gradation ? color2.colors100.hex8 : color2.colors.hex8,
+      moduleGradient: color2.gradation ? 1 : 0,
+      moduleGradientType: color2.irRotb == 'to bottom' ? 1 : color2.irRotb == 'to right' ? 2 : '',
+      moduleChooseStartColor: color3.gradation ? color3.colors0.hex8 : color3.colors.hex8,
+      moduleChooseEndColor: color3.gradation ? color3.colors100.hex8 : color3.colors.hex8,
+      moduleChooseGradient: color3.gradation ? 1 : 0,
       moduleChooseGradientType:
-        color3.lrRotb == 'to bottom' ? 1 : color3.lrRotb == 'to right' ? 2 : '',
+        color3.irRotb == 'to bottom' ? 1 : color3.irRotb == 'to right' ? 2 : '',
     };
     let loading = name == '一级模块' ? submitLoading1.value : submitLoading2.value;
     loading = true;

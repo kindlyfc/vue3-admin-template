@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="font-bold mb-20px">主题切换</div>
+    <!-- <div class="font-bold mb-20px">主题切换</div>
     <div class="top_search">
       <div class="mr1.5vw">
         <span class="label">选择主题：</span>
@@ -10,12 +10,12 @@
           placeholder="请选择"
           :options="[
             { value: 'defaultAlgorithm', label: '默认' },
-            { value: 'darkAlgorithm', label: '暗色' },
+            // { value: 'darkAlgorithm', label: '暗色' },
             { value: 'compactAlgorithm', label: '紧凑' },
           ]"
         ></a-select>
       </div>
-    </div>
+    </div> -->
     <div class="font-bold mb-20px">颜色自定义</div>
     <a-table
       class="w-100% mb-20px"
@@ -81,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, reactive } from 'vue';
+  import { ref, reactive, computed } from 'vue';
   import { useUiStore } from '@/store/modules/uiConfig';
   import type { TableColumnsType } from 'ant-design-vue';
   import ColorSelect from '@/components/basic/color-select/color-select.vue';
@@ -106,14 +106,14 @@
     { title: '颜色显示', dataIndex: 'colorShow' },
     {
       title: '是否渐变',
-      dataIndex: 'isGradation',
+      dataIndex: 'gradation',
       customRender: ({ text }) => {
         return text === false ? '否' : '是';
       },
     },
     {
       title: '渐变方向',
-      dataIndex: 'lrRotb',
+      dataIndex: 'irRotb',
       customRender: ({ text }) => {
         return lrRotbMap.value.find((item) => item.value === text)?.name;
       },
@@ -125,7 +125,7 @@
       fixed: 'right',
     },
   ];
-  const dataSource = ref(uiStore.customConfig.colorManageMobile);
+  const dataSource = computed(() => uiStore.customConfig.colorManageMobile);
 
   // S 颜色编辑
   const editVisible = ref<boolean>(false);
@@ -133,9 +133,9 @@
   let name: string = '';
   const showEdit = (record) => {
     name = record.name;
-    const { color, isGradation, lrRotb } = record;
-    Object.assign(formData, { isGradation, lrRotb });
-    if (isGradation) {
+    const { color, gradation, irRotb } = record;
+    Object.assign(formData, { gradation, irRotb });
+    if (gradation) {
       formData.colors0 = { hex8: color[0].hex8, hex: color[0].hex, a: color[0].a };
       formData.colors100 = { hex8: color[1].hex8, hex: color[1].hex8, a: color[1].a };
     } else {
@@ -152,8 +152,8 @@
   });
 
   const formData = reactive<any>({
-    isGradation: false,
-    lrRotb: '',
+    gradation: false,
+    irRotb: '',
     /* 颜色选择器 */
     colors: initColor(),
     colorsShow: false,
@@ -171,9 +171,9 @@
 
   const submitForm = () => {
     const data: any = {};
-    const { isGradation, lrRotb, colors, colors0, colors100 } = formData;
-    Object.assign(data, { isGradation, name, lrRotb, color: [] });
-    if (formData.isGradation) {
+    const { gradation, irRotb, colors, colors0, colors100 } = formData;
+    Object.assign(data, { gradation, name, irRotb, color: [] });
+    if (formData.gradation) {
       data.color.push({
         hex8: colors0.hex8,
         hex: colors0.hex,

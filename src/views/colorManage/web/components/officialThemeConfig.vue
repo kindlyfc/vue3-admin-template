@@ -17,7 +17,7 @@
             <div class="config-item">
               <span>
                 <a-tooltip
-                  title="内容主色调，包括基本按钮颜色，按钮悬停颜色，表单组件激活时边框颜色等"
+                  title="内容主色调，包括基本按钮颜色，按钮悬停颜色，按钮边框色，表单组件激活时边框颜色等"
                 >
                   主题色：<QuestionCircleOutlined />
                 </a-tooltip>
@@ -32,7 +32,10 @@
               </div>
             </div>
             <div class="config-item">
-              <span>成功色：</span>
+              <a-tooltip title="用于表示操作成功，如表单提交成功、上传进度，成功状态标签等组件">
+                <span>成功色：</span>
+                <QuestionCircleOutlined />
+              </a-tooltip>
               <div class="color">
                 <span class="">{{ form.colorSuccess }}</span>
                 <div
@@ -43,7 +46,10 @@
               </div>
             </div>
             <div class="config-item">
-              <span>警戒色：</span>
+              <a-tooltip title="用于表示警戒状态提示，警戒状态标签等组件">
+                <span>警戒色：</span>
+                <QuestionCircleOutlined />
+              </a-tooltip>
               <div class="color">
                 <span class="">{{ form.colorWarning }}</span>
                 <div
@@ -54,7 +60,10 @@
               </div>
             </div>
             <div class="config-item">
-              <span>错误色：</span>
+              <a-tooltip title="用于表示错误状态提示，错误状态标签、删除按钮等组件">
+                <span>错误色：</span>
+                <QuestionCircleOutlined />
+              </a-tooltip>
               <div class="color">
                 <span class="">{{ form.colorError }}</span>
                 <div
@@ -65,7 +74,10 @@
               </div>
             </div>
             <div class="config-item">
-              <span>信息色：</span>
+              <a-tooltip title="用于链接类按钮颜色（如表格中查看、编辑等操作按钮），删除按钮除外">
+                <span>信息色：</span>
+                <QuestionCircleOutlined />
+              </a-tooltip>
               <div class="color">
                 <span class="">{{ form.colorInfo }}</span>
                 <div
@@ -76,7 +88,10 @@
               </div>
             </div>
             <div class="config-item">
-              <span>文本色：</span>
+              <a-tooltip title="用于全局基础文本色">
+                <span>文本色：</span>
+                <QuestionCircleOutlined />
+              </a-tooltip>
               <div class="color">
                 <span class="">{{ form.colorTextBase }}</span>
                 <div
@@ -94,27 +109,62 @@
 
           <div class="pr-30px">
             <div class="config-item">
-              <span>默认字号：</span>
+              <a-tooltip title="用于全局基础文本字号，单位px取值12-32">
+                <span>默认字号：</span>
+                <QuestionCircleOutlined />
+              </a-tooltip>
               <div class="color">
-                <a-input-number v-model:value="form.fontSize" :min="12" :max="32" />
+                <a-input-number
+                  v-model:value="form.fontSize"
+                  @change="changeConfig"
+                  :min="12"
+                  :max="32"
+                />
               </div>
             </div>
             <div class="config-item">
-              <span>行高：</span>
+              <a-tooltip title="用于全局基础文本字号，取值0.1-3">
+                <span>行高：</span>
+                <QuestionCircleOutlined />
+              </a-tooltip>
               <div class="color">
-                <a-input-number v-model:value="form.lineHeight" :step="0.1" :min="0.5" :max="3" />
+                <a-input-number
+                  v-model:value="form.lineHeight"
+                  @change="changeConfig"
+                  :step="0.1"
+                  :min="0.5"
+                  :max="3"
+                />
               </div>
             </div>
             <div class="config-item">
-              <span>尺寸步长：</span>
+              <a-tooltip
+                title="用于控制组件尺寸的基础步长，尺寸步长结合尺寸变化单位，就可以派生各种尺寸梯度。通过调整步长即可得到不同的布局模式，取值4-16"
+              >
+                <span>尺寸步长：</span>
+                <QuestionCircleOutlined />
+              </a-tooltip>
               <div class="color">
-                <a-input-number v-model:value="form.sizeStep" :min="4" :max="16" />
+                <a-input-number
+                  v-model:value="form.sizeStep"
+                  @change="changeConfig"
+                  :min="4"
+                  :max="16"
+                />
               </div>
             </div>
             <div class="config-item">
-              <span>尺寸变化单位：</span>
+              <a-tooltip title="用于控制组件尺寸的变化单位 ，便于更加细致地控制尺寸梯度，取值1-16">
+                <span>尺寸变化单位：</span>
+                <QuestionCircleOutlined />
+              </a-tooltip>
               <div class="color">
-                <a-input-number v-model:value="form.sizeUnit" :min="1" :max="16" />
+                <a-input-number
+                  v-model:value="form.sizeUnit"
+                  @change="changeConfig"
+                  :min="1"
+                  :max="16"
+                />
               </div>
             </div>
           </div>
@@ -122,15 +172,26 @@
           <a-divider orientation="left">风格</a-divider>
           <div class="pr-30px">
             <div class="config-item">
-              <span>基础圆角：</span>
+              <a-tooltip title="基础组件的圆角大小，例如按钮、输入框、卡片等，取值0-16">
+                <span>基础圆角：</span>
+                <QuestionCircleOutlined />
+              </a-tooltip>
               <div class="color">
-                <a-input-number v-model:value="form.borderRadius" :min="0" :max="16" />
+                <a-input-number
+                  v-model:value="form.borderRadius"
+                  @change="changeConfig"
+                  :min="0"
+                  :max="16"
+                />
               </div>
             </div>
             <div class="config-item">
-              <span>线框风格：</span>
+              <a-tooltip title="用于将组件的视觉效果变为线框化">
+                <span>线框风格：</span>
+                <QuestionCircleOutlined />
+              </a-tooltip>
               <div class="color">
-                <a-switch v-model:checked="form.wireframe" />
+                <a-switch v-model:checked="form.wireFrame" @change="changeConfig" />
               </div>
             </div>
           </div>
@@ -223,19 +284,28 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, reactive } from 'vue';
+  import { ref, computed } from 'vue';
   import type { TableColumnsType } from 'ant-design-vue';
   import { Sketch } from '@ans1998/vue3-color';
   import { useUiStore } from '@/store/modules/uiConfig';
   import { message } from 'ant-design-vue';
   import { QuestionCircleOutlined } from '@ant-design/icons-vue';
+  import { itemModify } from '@/api/uiConfig';
 
   const uiStore = useUiStore();
 
   const open = ref(false);
 
   // S 主题编辑
-  const form = reactive<any>(uiStore.themeConfig.token);
+  const form = computed<any>(() => {
+    return uiStore.themeConfig.token;
+  });
+
+  const changeConfig = async () => {
+    await itemModify(form.value);
+    uiStore.getItemList();
+  };
+
   const panelVisible = ref(false);
 
   let colorName = '';
@@ -248,8 +318,8 @@
   const changSketchButton = (item) => {
     panelVisible.value = false;
     if (item.isOk) {
-      form[colorName] = '#' + item.hex;
-      uiStore.themeEdit(form);
+      form.value[colorName] = '#' + item.hex;
+      // uiStore.themeEdit(form);
       switch (colorName) {
         case 'colorSuccess':
           message.success('配置成功，这是一个“成功色”的示例');
@@ -261,6 +331,7 @@
           message.error('配置成功，这是一个“错误色”的示例');
           break;
       }
+      changeConfig();
     }
   };
 
