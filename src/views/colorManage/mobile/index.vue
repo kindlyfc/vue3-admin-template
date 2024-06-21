@@ -191,7 +191,7 @@
     const configData = dataSource.value;
     const index = configData.findIndex((item) => item.name === name);
     configData[index] = data;
-    uiStore.colorManageWebChange(configData);
+    // uiStore.colorManageWebChange(configData);
     editVisible.value = false;
   };
   // E 颜色编辑

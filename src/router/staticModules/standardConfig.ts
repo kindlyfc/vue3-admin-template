@@ -37,7 +37,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/colorManage',
     name: '/colorManage',
-    redirect: '/colorManage/mobile',
+    redirect: '/colorManage/web',
     component: RouterView,
     meta: {
       title: '颜色配置',

@@ -49,7 +49,7 @@
           :key="item.namePositionCode"
         >
           <img
-            w240px
+            style="max-width: 300px"
             :src="item.imageUrl ? item.url : chooseUrl"
             alt=""
             @click="showUpdateImg(item)"
@@ -82,6 +82,7 @@
         >
           <img
             w240px
+            style="width: 400px; height: 200px; object-fit: cover"
             :src="item.imageUrl ? item.url : chooseUrl"
             alt=""
             @click="showUpdateImg(item)"
