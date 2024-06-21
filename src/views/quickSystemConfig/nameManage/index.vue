@@ -3,11 +3,13 @@
     <div class="ca_region">
       <div class="titleSty">系统名称</div>
       <a-table
+        v-if="dataSource.length"
         :columns="columns"
-        :row-key="(record) => record.id"
+        :row-key="(record) => record.namePositionCode"
         :data-source="dataSource"
         :scroll="{ y: '62vh' }"
         :loading="tableLoading1"
+        :pagination="false"
         :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : undefined)"
       >
         <template #bodyCell="{ column, record }">
@@ -38,10 +40,16 @@
     <div class="ca_region">
       <div class="titleSty">系统LOGO</div>
       <div flex>
-        <div relative m20px mr60px v-for="item in dataSourceLogo" :key="item.namePositionCode">
+        <div
+          relative
+          m20px
+          mr60px
+          class="image_cont"
+          v-for="item in dataSourceLogo"
+          :key="item.namePositionCode"
+        >
           <img
             w240px
-            h164px
             :src="item.imageUrl ? item.url : chooseUrl"
             alt=""
             @click="showUpdateImg(item)"
@@ -64,10 +72,16 @@
     <div class="ca_region">
       <div class="titleSty">登录背景图</div>
       <div flex>
-        <div relative m20px mr60px v-for="item in dataSourceBgImg" :key="item.namePositionCode">
+        <div
+          relative
+          m20px
+          mr60px
+          class="image_cont"
+          v-for="item in dataSourceBgImg"
+          :key="item.namePositionCode"
+        >
           <img
             w240px
-            h164px
             :src="item.imageUrl ? item.url : chooseUrl"
             alt=""
             @click="showUpdateImg(item)"
@@ -238,6 +252,8 @@
   import { nameList, editName, imgList, editLogo } from '@/api/uiConfig';
   import { useUiStore } from '@/store/modules/uiConfig';
   import { message } from 'ant-design-vue';
+  import type { TableColumnsType } from 'ant-design-vue';
+
   const IMAGPATH = ref(import.meta.env.VITE_BASE_IMAGE_PATH);
   const uiStore = useUiStore();
   const formData = reactive<any>({
@@ -285,7 +301,7 @@
   const dataSource = ref<any>([]);
   const dataSourceBgImg = ref<any>([]);
   const dataSourceLogo = ref<any>([]);
-  const columns = ref<any>([
+  const columns: TableColumnsType = [
     {
       title: '名称位置',
       dataIndex: 'namePosition',
@@ -323,13 +339,14 @@
       align: 'center',
       width: 140,
     },
-  ]);
+  ];
 
   const getColorData = (data) => {
     Object.assign(formDataColor, data);
   };
   const getList = async () => {
     // nameList().then((res) => {
+    dataSource.value = [];
     const res = await uiStore.getSysName();
     dataSource.value = res;
     // });
@@ -487,5 +504,12 @@
     width: 20px;
     height: 20px;
     z-index: 10;
+  }
+
+  .image_cont {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 </style>
