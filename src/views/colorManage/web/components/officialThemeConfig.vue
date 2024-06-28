@@ -114,12 +114,7 @@
                 <QuestionCircleOutlined />
               </a-tooltip>
               <div class="color">
-                <a-input-number
-                  v-model:value="form.fontSize"
-                  @change="changeConfig"
-                  :min="12"
-                  :max="32"
-                />
+                <a-input-number v-model:value="form.fontSize" :min="12" :max="32" />
               </div>
             </div>
             <div class="config-item">
@@ -128,13 +123,7 @@
                 <QuestionCircleOutlined />
               </a-tooltip>
               <div class="color">
-                <a-input-number
-                  v-model:value="form.lineHeight"
-                  @change="changeConfig"
-                  :step="0.1"
-                  :min="0.5"
-                  :max="3"
-                />
+                <a-input-number v-model:value="form.lineHeight" :step="0.1" :min="0.5" :max="3" />
               </div>
             </div>
             <div class="config-item">
@@ -145,12 +134,7 @@
                 <QuestionCircleOutlined />
               </a-tooltip>
               <div class="color">
-                <a-input-number
-                  v-model:value="form.sizeStep"
-                  @change="changeConfig"
-                  :min="4"
-                  :max="16"
-                />
+                <a-input-number v-model:value="form.sizeStep" :min="4" :max="16" />
               </div>
             </div>
             <div class="config-item">
@@ -159,12 +143,7 @@
                 <QuestionCircleOutlined />
               </a-tooltip>
               <div class="color">
-                <a-input-number
-                  v-model:value="form.sizeUnit"
-                  @change="changeConfig"
-                  :min="1"
-                  :max="16"
-                />
+                <a-input-number v-model:value="form.sizeUnit" :min="1" :max="16" />
               </div>
             </div>
           </div>
@@ -177,12 +156,7 @@
                 <QuestionCircleOutlined />
               </a-tooltip>
               <div class="color">
-                <a-input-number
-                  v-model:value="form.borderRadius"
-                  @change="changeConfig"
-                  :min="0"
-                  :max="16"
-                />
+                <a-input-number v-model:value="form.borderRadius" :min="0" :max="16" />
               </div>
             </div>
             <div class="config-item">
@@ -191,8 +165,13 @@
                 <QuestionCircleOutlined />
               </a-tooltip>
               <div class="color">
-                <a-switch v-model:checked="form.wireFrame" @change="changeConfig" />
+                <a-switch v-model:checked="form.wireframe" />
               </div>
+            </div>
+            <div class="flex justify-center">
+              <a-button class="w-500px" type="primary" :loading="loading" @click="submitForm"
+                >确定</a-button
+              >
             </div>
           </div>
         </div>
@@ -284,26 +263,32 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, computed } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import type { TableColumnsType } from 'ant-design-vue';
   import { Sketch } from '@ans1998/vue3-color';
   import { useUiStore } from '@/store/modules/uiConfig';
   import { message } from 'ant-design-vue';
   import { QuestionCircleOutlined } from '@ant-design/icons-vue';
   import { itemModify } from '@/api/uiConfig';
+  import { cloneDeep } from 'lodash-es';
 
   const uiStore = useUiStore();
 
   const open = ref(false);
 
   // S 主题编辑
-  const form = computed<any>(() => {
-    return uiStore.themeConfig.token;
-  });
+  const form = ref<any>();
+  watch(
+    () => uiStore.themeConfig.token,
+    (newVal) => {
+      form.value = cloneDeep(newVal);
+    },
+  );
 
   const changeConfig = async () => {
+    delete form.value.deleteFlag;
     await itemModify(form.value);
-    uiStore.getItemList();
+    message.success('操作成功');
   };
 
   const panelVisible = ref(false);
@@ -319,19 +304,18 @@
     panelVisible.value = false;
     if (item.isOk) {
       form.value[colorName] = '#' + item.hex;
-      // uiStore.themeEdit(form);
-      switch (colorName) {
-        case 'colorSuccess':
-          message.success('配置成功，这是一个“成功色”的示例');
-          break;
-        case 'colorWarning':
-          message.warning('配置成功，这是一个“警戒色”的示例');
-          break;
-        case 'colorError':
-          message.error('配置成功，这是一个“错误色”的示例');
-          break;
-      }
-      changeConfig();
+    }
+  };
+
+  const loading = ref(false);
+  const submitForm = async () => {
+    loading.value = true;
+    try {
+      await itemModify(form.value);
+      message.success('操作成功');
+      uiStore.getItemList();
+    } finally {
+      loading.value = false;
     }
   };
 

@@ -54,8 +54,8 @@
   };
 
   const headerBg = getBGcolor('表单表头');
-  const bodyBgOdd = getBGcolor('表单颜色（单）');
-  const bodyBgEven = getBGcolor('表单颜色（双）');
+  const bodyBgOdd = getBGcolor('表单颜色（双）');
+  const bodyBgEven = getBGcolor('表单颜色（单）');
 
   const customHeaderRow = (record, index) => {
     return {

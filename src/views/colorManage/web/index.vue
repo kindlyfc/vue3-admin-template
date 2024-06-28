@@ -40,9 +40,9 @@
         </template>
         <template v-if="column.dataIndex === 'color'">
           <div class="flex">
-            <div>{{ record.color[0].hex }}</div>
+            <div>{{ record.color[0].hex8 }}</div>
             <span v-if="record.gradation">&nbsp;-&nbsp;</span>
-            <div v-if="record.gradation">{{ record.color[1].hex }}</div>
+            <div v-if="record.gradation">{{ record.color[1].hex8 }}</div>
           </div>
         </template>
         <template v-if="column.dataIndex === 'a'">
@@ -92,7 +92,7 @@
 <script setup lang="ts">
   import { ref, reactive, computed, watch } from 'vue';
   import { useUiStore } from '@/store/modules/uiConfig';
-  import type { TableColumnsType } from 'ant-design-vue';
+  import { message, type TableColumnsType } from 'ant-design-vue';
   import ColorSelect from '@/components/basic/color-select/color-select.vue';
   import officialThemeConfig from './components/officialThemeConfig.vue';
   import { colorConfigModify, colorConfigList } from '@/api/uiConfig';
@@ -255,6 +255,7 @@
     try {
       await colorConfigModify(data);
       uiStore.getColorConfigList();
+      message.success('操作成功');
       editVisible.value = false;
     } finally {
       submitLoading.value = false;

@@ -155,7 +155,7 @@
             ><div w40px ml10px mt3px>px</div></div
           >
         </a-form-item>
-        <a-form-item label="字体间距">
+        <!-- <a-form-item label="字体间距">
           <div flex
             ><a-input-number
               style="width: 300px"
@@ -166,7 +166,7 @@
             ></a-input-number
             ><div w40px ml10px mt4px>px</div></div
           >
-        </a-form-item>
+        </a-form-item> -->
       </a-form>
     </a-modal>
 
@@ -238,6 +238,7 @@
             v-if="EidtVisible1"
             v-model:value="logoData.imageUrl"
             :echoList="[IMAGPATH + logoData.imageUrl]"
+            @deleteImage="logoData.imageUrl = ''"
           />
         </a-form-item>
       </a-form>
@@ -327,12 +328,12 @@
       key: 'fontSize',
       align: 'center',
     },
-    {
-      title: '字体间距',
-      dataIndex: 'fontInterval',
-      key: 'fontInterval',
-      align: 'center',
-    },
+    // {
+    //   title: '字体间距',
+    //   dataIndex: 'fontInterval',
+    //   key: 'fontInterval',
+    //   align: 'center',
+    // },
     {
       title: '操作',
       dataIndex: 'operation',

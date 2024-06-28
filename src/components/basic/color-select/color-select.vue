@@ -47,22 +47,22 @@
 
     <div class="mt-20px">
       <Sketch
+        v-model="props.formData.colors"
         v-if="panelVisibleMap.colorsShow && !props.formData.gradation"
         class="sketch"
-        v-model="props.formData.colors"
-        @changButton="changeColor(1)"
+        @changButton="(item) => changeColor(item, 1)"
       />
       <Sketch
+        v-model="props.formData.colors0"
         v-if="panelVisibleMap.colorsShow0 && props.formData.gradation"
         class="sketch"
-        v-model="props.formData.colors0"
-        @changButton="changeColor(2)"
+        @changButton="(item) => changeColor(item, 2)"
       />
       <Sketch
+        v-model="props.formData.colors100"
         v-if="panelVisibleMap.colorsShow100 && props.formData.gradation"
         class="sketch"
-        v-model="props.formData.colors100"
-        @changButton="changeColor(3)"
+        @changButton="(item) => changeColor(item, 3)"
       />
     </div>
   </div>
@@ -132,19 +132,37 @@
   };
 
   const isGradationChange = () => {
-    console.log(props.formData.gradation);
-    if (props.formData.gradation) {
-      props.formData.colors0 = {};
-      props.formData.irRotb = 'to bottom';
-    } else {
-      props.formData.colors0 = {};
-      props.formData.colors100 = {};
-      props.formData.irRotb = '';
-    }
+    // if (props.formData.gradation) {
+    //   props.formData.colors0 = {};
+    //   props.formData.irRotb = 'to bottom';
+    // } else {
+    //   props.formData.colors0 = {};
+    //   props.formData.colors100 = {};
+    //   props.formData.irRotb = '';
+    // }
     emit('props.formDataChange', props.formData);
   };
 
-  const changeColor = (type) => {
+  const changeColor = (item, type) => {
+    if (item.isOk) {
+      const color = {
+        hex8: '#' + item.hex,
+        hex: '#' + item.hex.slice(0, 6),
+        a: item.activeColor.split(',')[3].split(')')[0],
+      };
+      switch (type) {
+        case 1:
+          props.formData.colors = color;
+          break;
+        case 2:
+          props.formData.colors0 = color;
+          break;
+        case 3:
+          props.formData.colors100 = color;
+          break;
+      }
+    }
+    console.log(item, type);
     switch (type) {
       case 1:
         panelVisibleMap.colorsShow = false;
@@ -154,8 +172,6 @@
         break;
       case 3:
         panelVisibleMap.colorsShow100 = false;
-        break;
-      default:
         break;
     }
     emit('props.formDataChange', props.formData);
