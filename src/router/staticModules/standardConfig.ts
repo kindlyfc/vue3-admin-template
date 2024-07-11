@@ -97,6 +97,28 @@ const routes: Array<RouteRecordRaw> = [
     ],
   },
   {
+    path: '/publicComponents',
+    name: '/publicComponents',
+    redirect: '/publicComponents/ocr',
+    component: RouterView,
+    meta: {
+      title: '公用组件',
+      icon: 'rw',
+      authority: '/sys',
+    },
+    children: [
+      {
+        path: 'ocr',
+        name: `ocr`,
+        meta: {
+          title: 'OCR',
+          authority: '/sys/user',
+        },
+        component: () => import('@/views/publicComponents/ocr/ocr.vue'),
+      }
+    ],
+  },
+  {
     path: '/infoPush',
     name: '/infoPush',
     redirect: '/infoPush/infoPushIndex',
