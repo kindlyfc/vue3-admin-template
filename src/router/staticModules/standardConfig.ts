@@ -115,6 +115,15 @@ const routes: Array<RouteRecordRaw> = [
           authority: '/sys/user',
         },
         component: () => import('@/views/publicComponents/ocr/ocr.vue'),
+      },
+      {
+        path: 'minioUpload',
+        name: `minioUpload`,
+        meta: {
+          title: 'minio上传',
+          authority: '/sys/user',
+        },
+        component: () => import('@/views/publicComponents/minioUpload/minioUpload.vue'),
       }
     ],
   },

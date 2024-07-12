@@ -207,6 +207,11 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           changeOrigin: true,
           // rewrite: (path) => path.replace(/^\/api/, av ''),
         },
+        '/mybucket': {
+          target: 'http://127.0.0.1:9090', //测试环境
+          changeOrigin: true,
+          // rewrite: (path) => path.replace(/^\/api/, av ''),
+        },
         // '/ws-api': {
         //   target: 'wss://nest-api.buqiyuan.site',
         //   // target: 'http://localhost:7002',
