@@ -30,15 +30,17 @@
   const tableListeners = { ...attrs };
 
   // 在 columns 中应用统一属性
-  const columnsWithCustomProp = props.columns.map((column) => ({
-    ...column,
-    // 可拖拽
-    // resizable: true,
-    // 超出单元格省略
-    ellipsis: true,
-  }));
+  const columnsWithCustomProp = computed(() =>
+    props.columns.map((column) => ({
+      ...column,
+      // 可拖拽
+      // resizable: true,
+      // 超出单元格省略
+      ellipsis: true,
+    })),
+  );
 
-  const tableProps = computed(() => ({ ...props, columns: columnsWithCustomProp }));
+  const tableProps = computed(() => ({ ...props, columns: columnsWithCustomProp.value }));
   // E 继承并扩展 a-table 的属性
 
   // S 表头、表格背景色修改
