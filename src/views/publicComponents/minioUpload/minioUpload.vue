@@ -89,92 +89,96 @@
       const uploadAction = 'https://jsonplaceholder.typicode.com/posts/';
 
       const handleUpload = async () => {
-        const files = uploadFileList.value[0];
-        console.log('files:', files, files.name);
+        const files = uploadFileList.value;
+        console.log('files:', files.length, files.name);
         if (files.length === 0) {
           message.error('请先选择文件');
           return;
         }
 
-        try {
-          // 使用 FormData 上传文件
-          const formData = new FormData();
-          formData.append('file', files);
+        // try {
+        //   // 使用 FormData 上传文件
+        //   const formData = new FormData();
+        //   formData.append('file', files);
 
-          const response = await axios.put('http://127.0.0.1:9000/mybucket/' + files.name, files, {
-            headers: {
-              'Content-Type': files.type,
-            },
-            auth: {
-              username: 'minioadmin',
-              password: 'minioadmin',
-            },
+        //   const response = await axios.put('/bucket/hs-symbol/' + files.name, files, {
+        //     headers: {
+        //       'Content-Type': files.type,
+        //     },
+        //     auth: {
+        //       username: 'minioadmin',
+        //       password: 'minioadmin',
+        //     },
+        //   });
+
+        //   console.log('上传成功:', response.data);
+        // } catch (error) {
+        //   console.error('上传失败:', error);
+        // }
+
+        const currentFile = files[currentFileIndex];
+        currentFile.status = FileStatus.getMd5;
+        getFileMd5(currentFile.raw, async (md5) => {
+          const checkResult = await checkFileUploadedByMd5(md5);
+          console.group(checkResult, 'checkResult');
+          if (checkResult.data.data.status === 1) {
+            message.success(`上传成功，文件地址：${checkResult.data.data.url}`);
+            currentFile.status = FileStatus.success;
+            currentFile.uploadProgress = 100;
+            return;
+          } else if (checkResult.data.data.status === 2) {
+            let chunkUploadedList = checkResult.data.data.chunkUploadedList;
+            currentFile.chunkUploadedList = chunkUploadedList;
+          }
+
+          let fileChunks = createFileChunk(currentFile.raw, chunkSize);
+          let param = {
+            fileName: currentFile.name,
+            fileSize: currentFile.size,
+            chunkSize: chunkSize,
+            fileMd5: md5,
+            contentType: 'application/octet-stream',
+          };
+
+          let uploadIdInfoResult = await getFileUploadUrls(param);
+          console.log(uploadIdInfoResult, 'uploadIdInfoResult');
+          uploadIdInfo.value = uploadIdInfoResult.data.data;
+          saveFileUploadId(uploadIdInfoResult.data.data);
+          let uploadUrls = uploadIdInfoResult.data.data.uploadUrls;
+          if (fileChunks.length !== uploadUrls.length) {
+            message.error('文件分片上传地址获取错误');
+            return;
+          }
+
+          currentFile.chunkList = [];
+          fileChunks.forEach((chunkItem, index) => {
+            currentFile.chunkList.push({
+              chunkNumber: index + 1,
+              chunk: chunkItem,
+              uploadUrl: uploadUrls[index],
+              progress: 0,
+              status: '—',
+            });
           });
 
-          console.log('上传成功:', response.data);
-        } catch (error) {
-          console.error('上传失败:', error);
-        }
-
-        // const currentFile = files[currentFileIndex];
-        // currentFile.status = FileStatus.getMd5;
-        // getFileMd5(currentFile.raw, async (md5) => {
-        //   const checkResult = await checkFileUploadedByMd5(md5);
-        //   if (checkResult.data.status === 1) {
-        //     message.success(`上传成功，文件地址：${checkResult.data.url}`);
-        //     currentFile.status = FileStatus.success;
-        //     currentFile.uploadProgress = 100;
-        //     return;
-        //   } else if (checkResult.data.status === 2) {
-        //     let chunkUploadedList = checkResult.data.chunkUploadedList;
-        //     currentFile.chunkUploadedList = chunkUploadedList;
-        //   }
-
-        //   let fileChunks = createFileChunk(currentFile.raw, chunkSize);
-        //   let param = {
-        //     fileName: currentFile.name,
-        //     fileSize: currentFile.size,
-        //     chunkSize: chunkSize,
-        //     fileMd5: md5,
-        //     contentType: 'application/octet-stream',
-        //   };
-
-        //   let uploadIdInfoResult = await getFileUploadUrls(param);
-        //   uploadIdInfo.value = uploadIdInfoResult.data.data;
-        //   saveFileUploadId(uploadIdInfoResult.data.data);
-        //   let uploadUrls = uploadIdInfoResult.data.data.uploadUrls;
-        //   if (fileChunks.length !== uploadUrls.length) {
-        //     message.error('文件分片上传地址获取错误');
-        //     return;
-        //   }
-
-        //   currentFile.chunkList = [];
-        //   fileChunks.forEach((chunkItem, index) => {
-        //     currentFile.chunkList.push({
-        //       chunkNumber: index + 1,
-        //       chunk: chunkItem,
-        //       uploadUrl: uploadUrls[index],
-        //       progress: 0,
-        //       status: '—',
-        //     });
-        //   });
-
-        //   currentFile.status = FileStatus.uploading;
-        //   let tempFileChunks = processUploadChunkList([...currentFile.chunkList]);
-        //   await uploadChunkBase(tempFileChunks);
-        //   const mergeResult = await mergeFile({
-        //     uploadId: uploadIdInfo.value.uploadId,
-        //     fileName: currentFile.name,
-        //     md5: md5,
-        //   });
-        //   if (!mergeResult.success) {
-        //     currentFile.status = FileStatus.error;
-        //     message.error(mergeResult.error);
-        //   } else {
-        //     currentFile.status = FileStatus.success;
-        //     message.success(`上传成功，文件地址：${mergeResult.data.url}`);
-        //   }
-        // });
+          currentFile.status = FileStatus.uploading;
+          let tempFileChunks = processUploadChunkList([...currentFile.chunkList]);
+          console.log(tempFileChunks, 'tempFileChunks');
+          await uploadChunkBase(tempFileChunks);
+          const mergeResult = await mergeFile({
+            uploadId: uploadIdInfo.value.uploadId,
+            fileName: currentFile.name,
+            md5: md5,
+          });
+          console.log(mergeResult, 'mergeResult');
+          if (mergeResult.data.code !== 0) {
+            currentFile.status = FileStatus.error;
+            message.error(mergeResult.error);
+          } else {
+            currentFile.status = FileStatus.success;
+            message.success(`上传成功，文件地址：${mergeResult.data.url}`);
+          }
+        });
       };
 
       const clearFileHandler = () => {
@@ -296,17 +300,17 @@
       };
 
       const mergeFile = async (param) => {
-        return await axios.post('https://xxx.com/oss/upload/mergeFile', param);
+        return await axios.post('/api/v1/minio/upload/merge', param);
       };
 
       const checkFileUploadedByMd5 = async (md5) => {
-        return await axios.get('http://127.0.0.1:9000', {
+        return await axios.get('/api/v1/minio/upload/check', {
           params: { md5: md5 },
         });
       };
 
       const getFileUploadUrls = async (param) => {
-        return await axios.post('https://xxx.com/oss/upload/getFileUploadUrls', param);
+        return await axios.post('/api/v1/minio/upload', param);
       };
 
       const saveFileUploadId = (uploadId) => {

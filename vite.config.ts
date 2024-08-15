@@ -203,14 +203,28 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       port: 8088,
       proxy: {
         '/api': {
-          target: 'http://172.18.1.243:18081', //测试环境
+          target: 'http://172.18.1.243:58088', //测试环境
           changeOrigin: true,
           // rewrite: (path) => path.replace(/^\/api/, av ''),
         },
-        '/mybucket': {
-          target: 'http://127.0.0.1:9090', //测试环境
+        '/bucket': {
+          target: 'http://172.18.1.243:59001', // 测试环境
           changeOrigin: true,
-          // rewrite: (path) => path.replace(/^\/api/, av ''),
+          rewrite: (path) => path.replace(/^\/bucket/, ''),
+          // configure: (proxy: any, options: ServerOptions) => {
+          //   proxy.on('proxyReq', (proxyReq: any, req: any, res: any) => {
+          //     const targetUrl = `${options.target}${req.url?.replace(/^\/bucket/, '')}`
+          //     console.log(`Proxying request to: ${targetUrl}`)
+          //   })
+
+          //   proxy.on('error', (err: Error, req: any, res: any) => {
+          //     console.error(`Proxy error at ${req.url}: ${err.message}`)
+          //     res.writeHead(500, {
+          //       'Content-Type': 'text/plain',
+          //     })
+          //     res.end('Proxy error. Please try again later.')
+          //   })
+          // },
         },
         // '/ws-api': {
         //   target: 'wss://nest-api.buqiyuan.site',
