@@ -1,28 +1,28 @@
-import { fileURLToPath } from 'url';
-import { resolve } from 'node:path';
-import { loadEnv } from 'vite';
-import vueJsx from '@vitejs/plugin-vue-jsx';
-import legacy from '@vitejs/plugin-legacy';
-import vue from '@vitejs/plugin-vue';
-import checker from 'vite-plugin-checker';
-import { viteMockServe } from 'vite-plugin-mock';
-import Components from 'unplugin-vue-components/vite';
-import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
-import Unocss from 'unocss/vite';
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
-import dayjs from 'dayjs';
-import DefineOptions from 'unplugin-vue-define-options/vite';
-import pkg from './package.json';
-import type { UserConfig, ConfigEnv } from 'vite';
-const CWD = process.cwd();
-const baseSrc = fileURLToPath(new URL('./src', import.meta.url));
+import { fileURLToPath } from 'url'
+import { resolve } from 'node:path'
+import { loadEnv } from 'vite'
+import vueJsx from '@vitejs/plugin-vue-jsx'
+import legacy from '@vitejs/plugin-legacy'
+import vue from '@vitejs/plugin-vue'
+import checker from 'vite-plugin-checker'
+import { viteMockServe } from 'vite-plugin-mock'
+import Components from 'unplugin-vue-components/vite'
+import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
+import Unocss from 'unocss/vite'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import dayjs from 'dayjs'
+import DefineOptions from 'unplugin-vue-define-options/vite'
+import pkg from './package.json'
+import type { UserConfig, ConfigEnv } from 'vite'
+const CWD = process.cwd()
+const baseSrc = fileURLToPath(new URL('./src', import.meta.url))
 
 // 如果你使用到了 ant-design-vue 的 less 变量，通过兼容包将 v4 变量转译成 v3 版本，并通过 less-loader 注入：
-const { theme } = require('ant-design-vue/lib');
-const convertLegacyToken = require('ant-design-vue/lib/theme/convertLegacyToken');
-const { defaultAlgorithm, defaultSeed } = theme;
-const mapToken = defaultAlgorithm(defaultSeed);
-const v3Token = convertLegacyToken.default(mapToken);
+const { theme } = require('ant-design-vue/lib')
+const convertLegacyToken = require('ant-design-vue/lib/theme/convertLegacyToken')
+const { defaultAlgorithm, defaultSeed } = theme
+const mapToken = defaultAlgorithm(defaultSeed)
+const v3Token = convertLegacyToken.default(mapToken)
 
 // 环境变量
 // const BASE_ENV_CONFIG = loadEnv('', CWD);
@@ -32,14 +32,14 @@ const v3Token = convertLegacyToken.default(mapToken);
 const __APP_INFO__ = {
   pkg,
   lastBuildTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-};
+}
 
 // https://vitejs.dev/config/
 export default ({ command, mode }: ConfigEnv): UserConfig => {
   // 环境变量
-  const { VITE_BASE_URL, VITE_DROP_CONSOLE } = loadEnv(mode, CWD);
+  const { VITE_BASE_URL, VITE_DROP_CONSOLE } = loadEnv(mode, CWD)
 
-  const isBuild = command === 'build';
+  const isBuild = command === 'build'
 
   return {
     base: VITE_BASE_URL,
@@ -135,18 +135,18 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       }),
       // https://github.com/antfu/unplugin-vue-components
       //让 unplugin-vue-components 只有在生产环境生效
-      {
-        ...Components({
-          resolvers: [AntDesignVueResolver()],
-        }),
-        apply: 'build',
-      },
+      // {
+      //   ...Components({
+      //     resolvers: [AntDesignVueResolver()],
+      //   }),
+      //   apply: 'build',
+      // },
       // 开发环境动态加入ui库框架引入
       {
         name: 'dev-auto-import-antdv',
         transform(code, id) {
           if (/src\/main.ts$/.test(id)) {
-            const result = code.split('\n');
+            const result = code.split('\n')
             const script = `
               import * as components from 'ant-design-vue/es/components';
               const filters = ['AButton'];
@@ -155,13 +155,13 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
                   app.use(comp);
                 }
               });
-            `;
+            `
             // 解决首次加载isCustomElement的问题
-            result.splice(result.length - 2, 0, script);
+            result.splice(result.length - 2, 0, script)
             return {
               code: result.join('\n'),
               map: null,
-            };
+            }
           }
         },
         apply: 'serve',
@@ -203,9 +203,28 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       port: 8088,
       proxy: {
         '/api': {
-          target: 'http://172.18.1.243:18081', //测试环境
+          target: 'http://172.18.1.243:58088', //测试环境
           changeOrigin: true,
           // rewrite: (path) => path.replace(/^\/api/, av ''),
+        },
+        '/bucket': {
+          target: 'http://172.18.1.243:59001', // 测试环境
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/bucket/, ''),
+          // configure: (proxy: any, options: ServerOptions) => {
+          //   proxy.on('proxyReq', (proxyReq: any, req: any, res: any) => {
+          //     const targetUrl = `${options.target}${req.url?.replace(/^\/bucket/, '')}`
+          //     console.log(`Proxying request to: ${targetUrl}`)
+          //   })
+
+          //   proxy.on('error', (err: Error, req: any, res: any) => {
+          //     console.error(`Proxy error at ${req.url}: ${err.message}`)
+          //     res.writeHead(500, {
+          //       'Content-Type': 'text/plain',
+          //     })
+          //     res.end('Proxy error. Please try again later.')
+          //   })
+          // },
         },
         // '/ws-api': {
         //   target: 'wss://nest-api.buqiyuan.site',
@@ -245,5 +264,5 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         },
       },
     },
-  };
-};
+  }
+}

@@ -1,4 +1,4 @@
-import { request } from '@/utils/request';
+import { request } from '@/utils/request'
 /**
  * @description 上传文件
  */
@@ -9,7 +9,7 @@ export function upDateFile(data) {
     // 数据格式 formData
     headers: { 'Content-Type': 'multipart/form-data' },
     data
-  });
+  })
 }
 /**
  * @description 名称列表
@@ -18,7 +18,7 @@ export function nameList() {
   return request({
     url: `/v1/sys/config/nameTitle/list`,
     method: 'get',
-  });
+  })
 }
 /**
  * @description LOGO&&背景图列表
@@ -27,7 +27,7 @@ export function imgList() {
   return request({
     url: `/v1/sys/config/image/list`,
     method: 'get',
-  });
+  })
 }
 
 /**
@@ -38,7 +38,7 @@ export function editName(data) {
     url: `/v1/sys/config/nameTitle/modify`,
     method: 'post',
     data
-  });
+  })
 }
 /**
  * @description logo背景图编辑
@@ -48,7 +48,7 @@ export function editLogo(data) {
     url: `/v1/sys/config/image/modify`,
     method: 'post',
     data
-  });
+  })
 }
 
 /**
@@ -58,7 +58,7 @@ export function getModule() {
   return request({
     url: `/v1/sys/config/module`,
     method: 'get',
-  });
+  })
 }
 
 
@@ -70,5 +70,51 @@ export function editModule(data) {
     url: `/v1/sys/config/module/modify`,
     method: 'post',
     data
-  });
+  })
+}
+
+
+/**
+ * @description 获取主题配置
+ */
+export function itemList() {
+  return request({
+    url: `/v1/sys/item/itemList`,
+    method: 'get',
+  })
+}
+
+
+/**
+ * @description 主题配置修改
+ */
+export function itemModify(data) {
+  return request({
+    url: `/v1/sys/item/item/modify`,
+    method: 'post',
+    data
+  })
+}
+
+
+/**
+ * @description 获取颜色自定义配置
+ */
+export function colorConfigList() {
+  return request({
+    url: `/v1/sys/item/colorConfigList`,
+    method: 'get',
+  })
+}
+
+
+/**
+ * @description 颜色自定义配置修改
+ */
+export function colorConfigModify(data) {
+  return request({
+    url: `/v1/sys/item/colorConfig/modify`,
+    method: 'post',
+    data
+  })
 }

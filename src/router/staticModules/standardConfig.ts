@@ -2,42 +2,42 @@ import type { RouteRecordRaw } from 'vue-router'
 import RouterView from '@/layout/tabs/tabs-view.vue'
 
 const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/test',
-    name: '/test',
-    redirect: '/test/test',
-    component: RouterView,
-    meta: {
-      title: '测试页面',
-      icon: 'shijianpeizhi',
-      authority: '/sys',
-    },
-    children: [
+  // {
+  //   path: '/test',
+  //   name: '/test',
+  //   redirect: '/test/test',
+  //   component: RouterView,
+  //   meta: {
+  //     title: '测试页面',
+  //     icon: 'shijianpeizhi',
+  //     authority: '/sys',
+  //   },
+  //   children: [
 
-      {
-        path: 'test',
-        name: `test`,
-        meta: {
-          title: '测试页面',
-          authority: '/sys/user',
-        },
-        component: () => import('@/views/test/test/test.vue'),
-      },
-      {
-        path: 'test2',
-        name: `test2`,
-        meta: {
-          title: '测试页面2',
-          authority: '/sys/user',
-        },
-        component: () => import('@/views/test/test2/test2.vue'),
-      },
-    ],
-  },
+  //     {
+  //       path: 'test',
+  //       name: `test`,
+  //       meta: {
+  //         title: '测试页面',
+  //         authority: '/sys/user',
+  //       },
+  //       component: () => import('@/views/test/test/test.vue'),
+  //     },
+  //     {
+  //       path: 'test2',
+  //       name: `test2`,
+  //       meta: {
+  //         title: '测试页面2',
+  //         authority: '/sys/user',
+  //       },
+  //       component: () => import('@/views/test/test2/test2.vue'),
+  //     },
+  //   ],
+  // },
   {
     path: '/colorManage',
     name: '/colorManage',
-    redirect: '/colorManage/mobile',
+    redirect: '/colorManage/web',
     component: RouterView,
     meta: {
       title: '颜色配置',
@@ -93,6 +93,37 @@ const routes: Array<RouteRecordRaw> = [
           authority: '/sys/user',
         },
         component: () => import('@/views/quickSystemConfig/modulemanage/index.vue'),
+      }
+    ],
+  },
+  {
+    path: '/publicComponents',
+    name: '/publicComponents',
+    redirect: '/publicComponents/ocr',
+    component: RouterView,
+    meta: {
+      title: '公用组件',
+      icon: 'rw',
+      authority: '/sys',
+    },
+    children: [
+      {
+        path: 'ocr',
+        name: `ocr`,
+        meta: {
+          title: 'OCR',
+          authority: '/sys/user',
+        },
+        component: () => import('@/views/publicComponents/ocr/ocr.vue'),
+      },
+      {
+        path: 'minioUpload',
+        name: `minioUpload`,
+        meta: {
+          title: 'minio上传',
+          authority: '/sys/user',
+        },
+        component: () => import('@/views/publicComponents/minioUpload/minioUpload.vue'),
       }
     ],
   },

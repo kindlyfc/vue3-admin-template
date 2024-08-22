@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show="!props.formData.isGradation" mt3px mb10px flex>
+    <div v-show="!props.formData.gradation" mt3px mb10px flex>
       <div
         class="color_box"
         :style="{ backgroundColor: props.formData.colors?.hex8 }"
@@ -9,7 +9,7 @@
       <span ml10px mt2px>{{ props.formData.colors?.hex8 }}</span></div
     >
 
-    <div v-show="props.formData.isGradation" mt3px mb10px flex>
+    <div v-show="props.formData.gradation" mt3px mb10px flex>
       <span mt2px>0%处: </span>
       <div
         ml4px
@@ -29,16 +29,16 @@
 
     <a-checkbox
       v-if="!justOneColor"
-      v-model:checked="props.formData.isGradation"
+      v-model:checked="props.formData.gradation"
       @change="isGradationChange"
       class="mt6px"
       >是否渐变</a-checkbox
     >
     <a-radio-group
-      v-show="props.formData.isGradation"
+      v-show="props.formData.gradation"
       ml20px
       @change="changeGradation"
-      v-model:value="props.formData.lrRotb"
+      v-model:value="props.formData.irRotb"
     >
       <a-radio v-for="item in lrRotbMap" :key="item.value" :value="item.value">{{
         item.name
@@ -47,22 +47,22 @@
 
     <div class="mt-20px">
       <Sketch
-        v-if="panelVisibleMap.colorsShow && !props.formData.isGradation"
-        class="sketch"
         v-model="props.formData.colors"
-        @changButton="changeColor(1)"
+        v-if="panelVisibleMap.colorsShow && !props.formData.gradation"
+        class="sketch"
+        @changButton="(item) => changeColor(item, 1)"
       />
       <Sketch
-        v-if="panelVisibleMap.colorsShow0 && props.formData.isGradation"
-        class="sketch"
         v-model="props.formData.colors0"
-        @changButton="changeColor(2)"
+        v-if="panelVisibleMap.colorsShow0 && props.formData.gradation"
+        class="sketch"
+        @changButton="(item) => changeColor(item, 2)"
       />
       <Sketch
-        v-if="panelVisibleMap.colorsShow100 && props.formData.isGradation"
-        class="sketch"
         v-model="props.formData.colors100"
-        @changButton="changeColor(3)"
+        v-if="panelVisibleMap.colorsShow100 && props.formData.gradation"
+        class="sketch"
+        @changButton="(item) => changeColor(item, 3)"
       />
     </div>
   </div>
@@ -81,8 +81,8 @@
       type: Object,
       default: () => {
         return {
-          isGradation: false,
-          lrRotb: '',
+          gradation: false,
+          irRotb: '',
           /* 颜色选择器 */
           colors: {
             hex8: '#FFFFFFFF',
@@ -132,19 +132,37 @@
   };
 
   const isGradationChange = () => {
-    console.log(props.formData.isGradation);
-    if (props.formData.isGradation) {
-      props.formData.colors0 = {};
-      props.formData.lrRotb = 'to bottom';
-    } else {
-      props.formData.colors0 = {};
-      props.formData.colors100 = {};
-      props.formData.lrRotb = '';
-    }
+    // if (props.formData.gradation) {
+    //   props.formData.colors0 = {};
+    //   props.formData.irRotb = 'to bottom';
+    // } else {
+    //   props.formData.colors0 = {};
+    //   props.formData.colors100 = {};
+    //   props.formData.irRotb = '';
+    // }
     emit('props.formDataChange', props.formData);
   };
 
-  const changeColor = (type) => {
+  const changeColor = (item, type) => {
+    if (item.isOk) {
+      const color = {
+        hex8: '#' + item.hex,
+        hex: '#' + item.hex.slice(0, 6),
+        a: item.activeColor.split(',')[3].split(')')[0],
+      };
+      switch (type) {
+        case 1:
+          props.formData.colors = color;
+          break;
+        case 2:
+          props.formData.colors0 = color;
+          break;
+        case 3:
+          props.formData.colors100 = color;
+          break;
+      }
+    }
+    console.log(item, type);
     switch (type) {
       case 1:
         panelVisibleMap.colorsShow = false;
@@ -154,8 +172,6 @@
         break;
       case 3:
         panelVisibleMap.colorsShow100 = false;
-        break;
-      default:
         break;
     }
     emit('props.formDataChange', props.formData);

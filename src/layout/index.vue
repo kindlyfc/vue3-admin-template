@@ -46,8 +46,8 @@
   const getBGcolor = (name) => {
     return computed(() => {
       const colorInfo = uiStore.customConfig.colorManageWeb.find((item) => item.name === name);
-      if (colorInfo.isGradation) {
-        return `linear-gradient(${colorInfo?.lrRotb}, ${colorInfo?.color[0].hex8}, ${colorInfo?.color[1].hex8})`;
+      if (colorInfo?.gradation) {
+        return `linear-gradient(${colorInfo?.irRotb}, ${colorInfo?.color[0].hex8}, ${colorInfo?.color[1].hex8})`;
       } else {
         return colorInfo?.color[0].hex8;
       }

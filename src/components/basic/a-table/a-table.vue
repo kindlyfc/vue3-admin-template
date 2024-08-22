@@ -15,7 +15,7 @@
 
 <script setup>
   import { useUiStore } from '@/store/modules/uiConfig';
-  import { defineProps, useAttrs, computed, reactive } from 'vue';
+  import { defineProps, useAttrs, computed } from 'vue';
   import { Table } from 'ant-design-vue';
 
   // S 继承并扩展 a-table 的属性
@@ -30,23 +30,25 @@
   const tableListeners = { ...attrs };
 
   // 在 columns 中应用统一属性
-  const columnsWithCustomProp = props.columns.map((column) => ({
-    ...column,
-    // 可拖拽
-    resizable: true,
-    // 超出单元格省略
-    ellipsis: true,
-  }));
+  const columnsWithCustomProp = computed(() =>
+    props.columns.map((column) => ({
+      ...column,
+      // 可拖拽
+      // resizable: true,
+      // 超出单元格省略
+      ellipsis: true,
+    })),
+  );
 
-  const tableProps = reactive({ ...props, columns: columnsWithCustomProp });
+  const tableProps = computed(() => ({ ...props, columns: columnsWithCustomProp.value }));
   // E 继承并扩展 a-table 的属性
 
   // S 表头、表格背景色修改
   const getBGcolor = (name) => {
     return computed(() => {
       const colorInfo = uiStore.customConfig.colorManageWeb.find((item) => item.name === name);
-      if (colorInfo.isGradation) {
-        return `linear-gradient(${colorInfo?.lrRotb}, ${colorInfo?.color[0].hex8}, ${colorInfo?.color[1].hex8})`;
+      if (colorInfo?.gradation) {
+        return `linear-gradient(${colorInfo?.irRotb}, ${colorInfo?.color[0].hex8}, ${colorInfo?.color[1].hex8})`;
       } else {
         return colorInfo?.color[0].hex8;
       }
@@ -54,8 +56,8 @@
   };
 
   const headerBg = getBGcolor('表单表头');
-  const bodyBgOdd = getBGcolor('表单颜色（单）');
-  const bodyBgEven = getBGcolor('表单颜色（双）');
+  const bodyBgOdd = getBGcolor('表单颜色（双）');
+  const bodyBgEven = getBGcolor('表单颜色（单）');
 
   const customHeaderRow = (record, index) => {
     return {

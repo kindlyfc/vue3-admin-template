@@ -112,7 +112,7 @@
     }
   });
 
-  const emit = defineEmits(['update:value']);
+  const emit = defineEmits(['update:value', 'deleteImage']);
 
   function getBase64(img, callback) {
     const reader = new FileReader();
@@ -181,6 +181,7 @@
       files.value.splice(index, 1);
     }
     defaultFileList.value.splice(index, 1);
+    emit('deleteImage');
   };
 
   defineExpose({

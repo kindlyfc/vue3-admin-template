@@ -119,9 +119,11 @@
 <style lang="less" scoped>
   .sider-container {
     min-height: 40vh;
+    max-height: calc(100vh - 280px);
     margin-top: 50px;
     overflow: auto;
     cursor: pointer;
+    overflow-y: scroll;
     // background-color: #000;
 
     > div {

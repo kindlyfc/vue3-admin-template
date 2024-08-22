@@ -10,7 +10,7 @@
           placeholder="请选择"
           :options="[
             { value: 'defaultAlgorithm', label: '默认' },
-            { value: 'darkAlgorithm', label: '暗色' },
+            // { value: 'darkAlgorithm', label: '暗色' },
             { value: 'compactAlgorithm', label: '紧凑' },
           ]"
         ></a-select>
@@ -30,9 +30,9 @@
               class="w-60px h-20px colorShow"
               :style="{ background: record.color[0].hex8 }"
             ></div>
-            <span v-if="record.color[1]">&nbsp;-&nbsp;</span>
+            <span v-if="record.gradation">&nbsp;-&nbsp;</span>
             <div
-              v-if="record.color[1]"
+              v-if="record.gradation"
               class="w-60px h-20px colorShow"
               :style="{ background: record.color[1].hex8 }"
             ></div>
@@ -40,16 +40,16 @@
         </template>
         <template v-if="column.dataIndex === 'color'">
           <div class="flex">
-            <div>{{ record.color[0].hex }}</div>
-            <span v-if="record.color[1]">&nbsp;-&nbsp;</span>
-            <div v-if="record.color[1]">{{ record.color[1].hex }}</div>
+            <div>{{ record.color[0].hex8 }}</div>
+            <span v-if="record.gradation">&nbsp;-&nbsp;</span>
+            <div v-if="record.gradation">{{ record.color[1].hex8 }}</div>
           </div>
         </template>
         <template v-if="column.dataIndex === 'a'">
           <div class="flex">
-            <div>{{ parseInt(record.color[0].a * 100) + '%' }}</div>
-            <span v-if="record.color[1]">&nbsp;-&nbsp;</span>
-            <div v-if="record.color[1]">{{ parseInt(record.color[1].a * 100) + '%' }}</div>
+            <div>{{ record.color[0].a ? parseInt(record.color[0].a * 100) + '%' : '--' }}</div>
+            <span v-if="record.gradation">&nbsp;-&nbsp;</span>
+            <div v-if="record.gradation">{{ parseInt(record.color[1].a * 100) + '%' }}</div>
           </div>
         </template>
         <template v-if="column.dataIndex === 'colorShow'">
@@ -67,7 +67,13 @@
     <officialThemeConfig></officialThemeConfig>
 
     <!-- 颜色编辑弹框 -->
-    <a-modal v-model:open="editVisible" title="颜色编辑" width="600px" @ok="submitForm">
+    <a-modal
+      v-model:open="editVisible"
+      title="颜色编辑"
+      width="600px"
+      @ok="submitForm"
+      :ok-button-props="{ loading: submitLoading }"
+    >
       <a-form
         ref="formRef"
         :model="formData"
@@ -76,7 +82,7 @@
         relative
       >
         <a-form-item label="颜色选择">
-          <ColorSelect @form-data-change="getColorData" v-model:formData="formData"></ColorSelect>
+          <ColorSelect v-model:formData="colorData"></ColorSelect>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -84,11 +90,12 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, reactive } from 'vue';
+  import { ref, reactive, computed, watch } from 'vue';
   import { useUiStore } from '@/store/modules/uiConfig';
-  import type { TableColumnsType } from 'ant-design-vue';
+  import { message, type TableColumnsType } from 'ant-design-vue';
   import ColorSelect from '@/components/basic/color-select/color-select.vue';
   import officialThemeConfig from './components/officialThemeConfig.vue';
+  import { colorConfigModify, colorConfigList } from '@/api/uiConfig';
 
   const uiStore = useUiStore();
 
@@ -110,14 +117,14 @@
     { title: '颜色显示', dataIndex: 'colorShow' },
     {
       title: '是否渐变',
-      dataIndex: 'isGradation',
+      dataIndex: 'gradation',
       customRender: ({ text }) => {
         return text === false ? '否' : '是';
       },
     },
     {
       title: '渐变方向',
-      dataIndex: 'lrRotb',
+      dataIndex: 'irRotb',
       customRender: ({ text }) => {
         return lrRotbMap.value.find((item) => item.value === text)?.name;
       },
@@ -129,23 +136,49 @@
       fixed: 'right',
     },
   ];
-  const dataSource = ref(uiStore.customConfig.colorManageWeb);
+  const dataSource = computed<any>(() => uiStore.customConfig.colorManageWeb);
 
   // S 颜色编辑
   const editVisible = ref<boolean>(false);
+  const submitLoading = ref<boolean>(false);
 
   let name: string = '';
   const showEdit = (record) => {
     name = record.name;
-    const { color, isGradation, lrRotb } = record;
-    Object.assign(formData, { isGradation, lrRotb });
-    if (isGradation) {
-      formData.colors0 = { hex8: color[0].hex8, hex: color[0].hex, a: color[0].a };
-      formData.colors100 = { hex8: color[1].hex8, hex: color[1].hex8, a: color[1].a };
+    const { color, gradation, irRotb, nameCode } = record;
+    Object.assign(formData, { gradation, irRotb, nameCode });
+    Object.assign(colorData, { gradation, irRotb, nameCode });
+    if (gradation) {
+      formData.colors0 = {
+        // hex8: color[0].hex8,
+        // hex: color[0].hex,
+        // a: color[0].a,
+        id: color[0].id,
+        nameCode: color[0].nameCode,
+      };
+      colorData.colors0 = {
+        hex8: color[0].hex8,
+        hex: color[0].hex,
+        a: color[0].a,
+      };
+      formData.colors100 = {
+        // hex8: color[1].hex8,
+        // hex: color[1].hex8,
+        // a: color[1].a,
+        id: color[1].id,
+        nameCode: color[1].nameCode,
+      };
+      colorData.colors100 = {
+        hex8: color[1].hex8,
+        hex: color[1].hex,
+        a: color[1].a,
+      };
     } else {
-      const { hex, hex8, a } = color[0];
-      formData.colors = { hex, hex8, a };
+      const { hex, hex8, a, id, nameCode } = color[0];
+      formData.colors = { id, nameCode };
+      colorData.colors = { hex, hex8, a };
     }
+    console.log(formData);
     editVisible.value = true;
   };
 
@@ -156,8 +189,21 @@
   });
 
   const formData = reactive<any>({
-    isGradation: false,
-    lrRotb: '',
+    gradation: false,
+    irRotb: '',
+    /* 颜色选择器 */
+    colors: initColor(),
+    colorsShow: false,
+    /* 颜色选择器0% */
+    colors0: initColor(),
+    colorsShow0: false,
+    /* 颜色选择器100% */
+    colors100: initColor(),
+    colorsShow100: false,
+  });
+  const colorData = reactive<any>({
+    gradation: false,
+    irRotb: '',
     /* 颜色选择器 */
     colors: initColor(),
     colorsShow: false,
@@ -169,34 +215,52 @@
     colorsShow100: false,
   });
 
-  const getColorData = (data) => {
-    Object.assign(formData, data);
-  };
-
-  const submitForm = () => {
-    const data: any = {};
-    const { isGradation, lrRotb, colors, colors0, colors100 } = formData;
-    Object.assign(data, { isGradation, name, lrRotb, color: [] });
-    if (formData.isGradation) {
+  const submitForm = async () => {
+    const data: any = { color: [] };
+    const { gradation, irRotb, colors, colors0, colors100 } = colorData;
+    if (formData.gradation) {
       data.color.push({
         hex8: colors0.hex8,
         hex: colors0.hex,
         a: colors0.a,
+        id: formData.colors0.id,
+        nameCode: formData.colors0.nameCode,
       });
       data.color.push({
         hex8: colors100.hex8,
         hex: colors100.hex,
         a: colors100.a,
+        id: formData.colors100.id,
+        nameCode: formData.colors100.nameCode,
       });
     } else {
       const { hex8, hex, a } = colors;
-      data.color.push({ hex8, hex, a });
+      data.color.push({
+        hex8,
+        hex,
+        a,
+        id: formData.colors.id,
+        nameCode: formData.colors.nameCode,
+      });
+      data.color.push({
+        hex8,
+        hex,
+        a,
+        id: formData.colors.id,
+        nameCode: formData.colors.nameCode,
+      });
     }
-    const configData = dataSource.value;
-    const index = configData.findIndex((item) => item.name === name);
-    configData[index] = data;
-    uiStore.colorManageWebChange(configData);
-    editVisible.value = false;
+    Object.assign(data, { gradation, name, irRotb: irRotb || '', nameCode: formData.nameCode });
+    submitLoading.value = true;
+    try {
+      await colorConfigModify(data);
+      uiStore.getColorConfigList();
+      message.success('操作成功');
+      editVisible.value = false;
+    } finally {
+      submitLoading.value = false;
+    }
+    // uiStore.colorManageWebChange(configData);
   };
   // E 颜色编辑
 </script>

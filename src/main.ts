@@ -14,6 +14,8 @@ import {
 const app = createApp(App)
 import 'vue3-video-play-emiyagm/dist/style.css' // 引入css
 import 'font-awesome/css/font-awesome.css'
+import 'ant-design-vue/dist/reset.css';
+import Antd from 'ant-design-vue';
 
 import ATable from '@/components/basic/a-table/a-table.vue'
 
@@ -40,7 +42,7 @@ async function setupApp() {
   await setupI18n(app)
   // 挂载路由
   await setupRouter(app)
-  app.mount('#app')
+  app.use(Antd).mount('#app')
 }
 setupPlugins()
 setupApp()

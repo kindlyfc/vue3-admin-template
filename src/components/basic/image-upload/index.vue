@@ -1,5 +1,5 @@
 <template>
-  <div flex flex-col>
+  <div class="flex flex-col">
     <a-upload
       v-bind="{ ...$attrs, ...props }"
       :list-type="props.listType"
@@ -29,6 +29,10 @@
     </div>
     <!-- 提示 E -->
 
+    <!-- 调用摄像头拍照 -->
+    <a-button type="link" @click="cameraVisible = true">摄像头拍照</a-button>
+    <CameraPhotography :show-modal="cameraVisible" @complate="getCameraImage"></CameraPhotography>
+
     <!-- 图片预览弹窗 S -->
     <!-- <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
       <img alt="example" style="width: 100%" :src="previewImage" />
@@ -51,6 +55,7 @@
   import { uploadProps } from 'ant-design-vue/es/upload/interface';
   import { message, UploadProps } from 'ant-design-vue';
   import { arrayIsSame } from '../../../utils/common';
+  import CameraPhotography from '../camera-photography/camera-photography.vue';
 
   // 图片预览
   const setPreviewImageVisible = (value): void => {
@@ -73,7 +78,7 @@
     limit: { type: Number, default: 1 },
     showTip: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     listType: {
       type: String,
@@ -89,6 +94,7 @@
 
   // 更新value
   const updateValue = (value: any, fileList) => {
+    console.log(value, fileList, 444444);
     emit('update:value', value);
     emit('change', value, fileList);
   };
@@ -103,7 +109,6 @@
 
       // 如果值相同则不更新
       if (!arrayIsSame(newValue, props.value)) {
-        console.log('更新value', newValue);
         updateValue(newValue, value);
       }
     },
@@ -154,6 +159,13 @@
     },
   );
 
+  // 摄像头拍照
+  const cameraVisible = ref(false);
+  const getCameraImage = (file) => {
+    console.log(file, 2222);
+    fileList.value.push(file);
+  };
+
   function getBase64(file: File) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -199,8 +211,7 @@
   };
 
   const removeHandle = (file: UploadProps['fileList'][number]) => {
-    console.log(file);
-    if (!file.url.includes('base64') && props.noDelExistingImage) {
+    if (!file.url?.includes('base64') && props.noDelExistingImage) {
       message.warning('不允许删除原有图片');
       return;
     }
