@@ -21,7 +21,7 @@ const endRoutes: RouteRecordRaw[] = [REDIRECT_ROUTE, errorRoute, notFound];
 //拍平路由及按钮权限
 const getListMenus = (data) => {
   try {
-    const menus: any = ['analyticalModel']; //统计分析默认都能看
+    const menus: any = []; //可以添加默认都能看的页面
     data.forEach((v) => {
       menus.push(v.permKey);
       if (!!v.children && v.children?.length > 0) {
