@@ -132,6 +132,7 @@
           }
 
           let fileChunks = createFileChunk(currentFile.raw, chunkSize);
+          console.log(fileChunks, 'fileChunks');
           let param = {
             fileName: currentFile.name,
             fileSize: currentFile.size,
@@ -176,7 +177,7 @@
             message.error(mergeResult.error);
           } else {
             currentFile.status = FileStatus.success;
-            message.success(`上传成功，文件地址：${mergeResult.data.url}`);
+            message.success(`上传成功，文件地址：${mergeResult.data.data.url}`);
           }
         });
       };
@@ -243,7 +244,9 @@
         const fileChunkList = [];
         let count = 0;
         while (count < file.size) {
-          fileChunkList.push({ file: file.slice(count, count + size) });
+          fileChunkList.push({
+            file: new File([file.slice(count, count + size)], `chunk${count}`),
+          });
           count += size;
         }
         return fileChunkList;
@@ -276,9 +279,9 @@
             }
             let chunk = fileChunks[index];
             currentFile.chunkList[chunk.chunkNumber - 1].status = '上传中';
-            let formData = new FormData();
-            formData.append('file', chunk.chunk);
-            const res = await axios.put(chunk.uploadUrl, chunk.chunk);
+            // let formData = new FormData();
+            // formData.append('file', chunk.chunk);
+            const res = await axios.put(chunk.uploadUrl, chunk.chunk.file);
             if (res.status === 200) {
               currentFile.chunkList[chunk.chunkNumber - 1].progress = 100;
               currentFile.chunkList[chunk.chunkNumber - 1].status = '上传完成';
@@ -293,9 +296,9 @@
             currentFile.uploadProgress = parseInt((index / fileChunks.length) * 100);
             upload();
           };
-          for (let i = 0; i < simultaneousUploads.value; i++) {
-            upload();
-          }
+          // for (let i = 0; i < simultaneousUploads.value; i++) {
+          upload();
+          // }
         });
       };
 
